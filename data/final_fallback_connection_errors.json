@@ -1,0 +1,96 @@
+{
+  "candidates": [
+    {
+      "id": "osm:290475280:4:r/family-3-0/seed-1017",
+      "index": 0,
+      "roles": {
+        "detector": 2,
+        "affected": [
+          1,
+          5
+        ]
+      },
+      "accepted": false,
+      "failures": [],
+      "error": "[TypeError: fetch failed] {\n  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8016\n      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1864:16) {\n    errno: -4078,\n    code: 'ECONNREFUSED',\n    syscall: 'connect',\n    address: '127.0.0.1',\n    port: 8016\n  }\n}\n",
+      "presentation_score": null
+    },
+    {
+      "id": "osm:721954310:4:f/family-3-1/seed-1002",
+      "index": 1,
+      "roles": {
+        "detector": 6,
+        "affected": [
+          2,
+          3
+        ]
+      },
+      "accepted": false,
+      "failures": [],
+      "error": "[TypeError: fetch failed] {\n  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8016\n      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1864:16) {\n    errno: -4078,\n    code: 'ECONNREFUSED',\n    syscall: 'connect',\n    address: '127.0.0.1',\n    port: 8016\n  }\n}\n",
+      "presentation_score": null
+    },
+    {
+      "id": "osm:721954310:4:f/family-3-1/seed-1010/local-2",
+      "index": 2,
+      "roles": {
+        "detector": 5,
+        "affected": [
+          3,
+          6
+        ]
+      },
+      "accepted": false,
+      "failures": [],
+      "error": "[TypeError: fetch failed] {\n  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8016\n      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1864:16) {\n    errno: -4078,\n    code: 'ECONNREFUSED',\n    syscall: 'connect',\n    address: '127.0.0.1',\n    port: 8016\n  }\n}\n",
+      "presentation_score": null
+    },
+    {
+      "id": "osm:721954310:4:f/family-3-1/seed-1010/local-5",
+      "index": 3,
+      "roles": {
+        "detector": 4,
+        "affected": [
+          2,
+          6
+        ]
+      },
+      "accepted": false,
+      "failures": [],
+      "error": "[TypeError: fetch failed] {\n  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8016\n      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1864:16) {\n    errno: -4078,\n    code: 'ECONNREFUSED',\n    syscall: 'connect',\n    address: '127.0.0.1',\n    port: 8016\n  }\n}\n",
+      "presentation_score": null
+    },
+    {
+      "id": "osm:721954310:4:f/family-3-1/seed-1010/local-9",
+      "index": 4,
+      "roles": {
+        "detector": 6,
+        "affected": [
+          2,
+          5
+        ]
+      },
+      "accepted": false,
+      "failures": [],
+      "error": "[TypeError: fetch failed] {\n  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8016\n      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1864:16) {\n    errno: -4078,\n    code: 'ECONNREFUSED',\n    syscall: 'connect',\n    address: '127.0.0.1',\n    port: 8016\n  }\n}\n",
+      "presentation_score": null
+    },
+    {
+      "id": "osm:721954310:4:f/family-3-1/seed-1010/local-19",
+      "index": 5,
+      "roles": {
+        "detector": 6,
+        "affected": [
+          4,
+          5
+        ]
+      },
+      "accepted": false,
+      "failures": [],
+      "error": "[TypeError: fetch failed] {\n  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8016\n      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1864:16) {\n    errno: -4078,\n    code: 'ECONNREFUSED',\n    syscall: 'connect',\n    address: '127.0.0.1',\n    port: 8016\n  }\n}\n",
+      "presentation_score": null
+    }
+  ],
+  "official_fixture_modified": false,
+  "completed": true
+}

@@ -1,7 +1,7 @@
 """Milestone 2 local HTTP server. Run: python server.py"""
 import argparse
 import os
-from deployment_config import api_base_url, allowed_origins
+from deployment_config import api_base_url, allowed_origins, map_data_path
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from pathlib import Path
@@ -222,7 +222,7 @@ def parse_server_args(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "8000")))
     parser.add_argument("--host", default=os.getenv("HOST", "0.0.0.0"))
-    parser.add_argument("--map-data", type=Path, default=Path(os.getenv("MAP_DATA", str(ROOT / "data/raw/hcm_map4.osm"))))
+    parser.add_argument("--map-data", type=map_data_path, default=map_data_path())
     return parser.parse_args(argv)
 
 

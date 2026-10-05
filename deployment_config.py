@@ -1,5 +1,6 @@
 """Public, non-secret deployment settings. No dotenv dependency required."""
 import os
+from pathlib import Path
 from urllib.parse import urlsplit
 
 
@@ -19,3 +20,14 @@ def allowed_origins():
         if p.scheme not in ('http','https') or not p.netloc or p.path or p.query or p.fragment or p.username or p.password:
             raise ValueError('ALLOWED_ORIGINS must contain explicit HTTP(S) origins')
     return values
+
+
+ROOT = Path(__file__).resolve().parent
+
+
+def map_data_path(value=None):
+    """Resolve optional map overrides consistently for build and runtime."""
+    if value is None:
+        value = os.getenv('MAP_DATA', '')
+    path = Path(str(value).strip() or 'data/raw/hcm_map4.osm')
+    return path if path.is_absolute() else ROOT / path

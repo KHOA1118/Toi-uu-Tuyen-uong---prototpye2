@@ -1,0 +1,22 @@
+{
+  "candidate": "candidate-1.json",
+  "url": "http://127.0.0.1:8017/",
+  "actual_roles": {
+    "detector": 6,
+    "affected": [
+      2,
+      3
+    ]
+  },
+  "slowdown_observed": true,
+  "slowdown_ui": "Xe 1 · Đến khách 1 - đoạn 113/383 - Đã giao 0\n\nXe 2 · Đến khách 11 - đoạn 133/213 - Đã giao 1\n\nXe 3 · Đến khách 3 - đoạn 124/270 - Đã giao 2\n\nXe 4 · Đến khách 24 - đoạn 113/373 - Đã giao 0\n\nXe 5 · Giao khách 5 - đoạn 109/238 - Đã giao 0\n\nXe 6 · Đi chậm do sự cố - đoạn 129/196 - Đã giao 2",
+  "first_completed_run": {
+    "status": "Tất cả xe đã về depot · 150.0 giây",
+    "vehicles": 6,
+    "customers_per_vehicle": 4
+  },
+  "timeline": "0.0 s · Nghiệm ban đầu\n0.0 s · Xe di chuyển\n31.6 s · Đã ghi nhận sự cố\n32.3 s · Bắt đầu tái tối ưu\n32.7 s · Đã áp dụng nghiệm mới",
+  "summary": "2 xe đổi tuyến - Giảm 50.1 giây thời gian chạy dự kiến",
+  "console_errors_and_warnings": [],
+  "visual_review": "Distinct turquoise V2 and green V3 corridors visible on real OSM; all six markers observed before zoom; existing pan/zoom used only for inspection; automated exact position-continuity assertions corroborate the visual review."
+}

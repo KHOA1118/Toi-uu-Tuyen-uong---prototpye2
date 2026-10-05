@@ -1,0 +1,293 @@
+{
+  "version": 9,
+  "configuration_seed": "osm:721954310:4:f/family-3-1/seed-1010/local-2",
+  "source_sha256": "a8f1c6a74e6fb1eb0d952a3d34d6794ec6d630283be21a699824cf1597eb89fa",
+  "roles": {
+    "detector": 5,
+    "affected": [
+      3,
+      6
+    ]
+  },
+  "scenario": {
+    "vehicle_count": 6,
+    "vehicle_capacity": 40,
+    "options": {
+      "seed": 42,
+      "iterations": 80,
+      "removal_count": 5
+    },
+    "stops": [
+      {
+        "id": 0,
+        "osm_node_id": "2154852449",
+        "lat": 10.7462586,
+        "lon": 106.7002207,
+        "demand": 0,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 0
+      },
+      {
+        "id": 1,
+        "osm_node_id": "5780899264",
+        "lat": 10.7427688,
+        "lon": 106.736303,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 2,
+        "osm_node_id": "8367041470",
+        "lat": 10.7428125,
+        "lon": 106.7339722,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 3,
+        "osm_node_id": "5778455230",
+        "lat": 10.7569703,
+        "lon": 106.7113551,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 4,
+        "osm_node_id": "5772599059",
+        "lat": 10.7626139,
+        "lon": 106.7090061,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 5,
+        "osm_node_id": "5772599064",
+        "lat": 10.7617364,
+        "lon": 106.7083785,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 6,
+        "osm_node_id": "11724751004",
+        "lat": 10.7650837,
+        "lon": 106.7501036,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 7,
+        "osm_node_id": "2026784772",
+        "lat": 10.7585743,
+        "lon": 106.7054871,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 8,
+        "osm_node_id": "3100319755",
+        "lat": 10.7620807,
+        "lon": 106.7080605,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 9,
+        "osm_node_id": "5778148611",
+        "lat": 10.7624688,
+        "lon": 106.7064043,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 10,
+        "osm_node_id": "5778272140",
+        "lat": 10.7581191,
+        "lon": 106.6999963,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 11,
+        "osm_node_id": "5778287253",
+        "lat": 10.7575548,
+        "lon": 106.6994832,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 12,
+        "osm_node_id": "11724751005",
+        "lat": 10.7651405,
+        "lon": 106.7500754,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 13,
+        "osm_node_id": "5780899271",
+        "lat": 10.7436538,
+        "lon": 106.7361673,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 14,
+        "osm_node_id": "13459519215",
+        "lat": 10.7535586,
+        "lon": 106.711351,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 15,
+        "osm_node_id": "1997244035",
+        "lat": 10.7612464,
+        "lon": 106.7054843,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 16,
+        "osm_node_id": "6783819964",
+        "lat": 10.7618177,
+        "lon": 106.7058687,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 17,
+        "osm_node_id": "5778272151",
+        "lat": 10.7576026,
+        "lon": 106.6997377,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 18,
+        "osm_node_id": "366468560",
+        "lat": 10.7651661,
+        "lon": 106.7500604,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 19,
+        "osm_node_id": "5772598977",
+        "lat": 10.7630856,
+        "lon": 106.7056239,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 20,
+        "osm_node_id": "366436931",
+        "lat": 10.764985,
+        "lon": 106.7501275,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 21,
+        "osm_node_id": "2394700317",
+        "lat": 10.7414535,
+        "lon": 106.733742,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 22,
+        "osm_node_id": "3100319752",
+        "lat": 10.7620847,
+        "lon": 106.7078745,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 23,
+        "osm_node_id": "5772633567",
+        "lat": 10.7626995,
+        "lon": 106.7077451,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      },
+      {
+        "id": 24,
+        "osm_node_id": "11052105660",
+        "lat": 10.7566485,
+        "lon": 106.7154706,
+        "demand": 10,
+        "ready_time": 0,
+        "due_date": 100000,
+        "service_time": 1
+      }
+    ]
+  },
+  "duration_ms": 150000,
+  "event": {
+    "type": "congestion",
+    "edge_id": "osm:721954310:4:f",
+    "incident_edge_id": "osm:721954310:4:f",
+    "from_node": "11021611527",
+    "to_node": "11323126971",
+    "baseline_travel_time": 17.895846312413553,
+    "baseline_speed": 8.333333333333334,
+    "travel_time_multiplier": 3,
+    "inject_at_ms": 28376,
+    "sample_interval_ms": 500,
+    "threshold": 0.5,
+    "consecutive_samples": 2,
+    "vehicles_using_edge": [
+      3,
+      5,
+      6
+    ]
+  }
+}

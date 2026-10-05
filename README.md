@@ -63,7 +63,8 @@ allow a fresh run; there is no mock optimization fallback.
 `data/presentation_scenario.json` stores fixed geographic inputs, LNS seed,
 fleet settings, map hash, hotspot timing and validation metadata. It contains no precomputed
 solutions or savings. Every run invokes real initial LNS and real dynamic LNS.
-Hidden congestion is injected at 5 simulated seconds. Known costs stay unchanged
+Hidden congestion is injected at the fixture-defined time (62.689 simulated seconds
+for configuration 54), just after Vehicle 5 enters the shared delivery edge. Known costs stay unchanged
 until two consecutive 500 ms telemetry intervals observe speed at or below 50%.
 The event then progresses DETECTED → REOPTIMIZING → ROUTES_UPDATED. A single
 process worker runs the real LNS while the browser polls every 300 ms and keeps
@@ -84,8 +85,9 @@ $env:LNS_TEST_URL='http://127.0.0.1:8013'
 node --test tests/*.cjs
 ```
 
-Some provenance tests use the original files on D: and skip when those external
-files are absent. The full-map and presentation tests require the supplied map.
+Optional provenance tests read `data/reference/homberger_1000_customer_instances.zip`
+and `data/reference/base_vrp+lns_(refined).py`; place the original inputs there to
+run them. That directory is ignored by Git; these two tests skip if inputs are absent. The full-map and presentation tests require the supplied map.
 The presentation test repeats the fixed scenario with different frame sizes and
 checks hidden-event isolation, telemetry, real solver calls, feasibility, continuous
 positions, and every vehicle returning to depot.
@@ -151,3 +153,14 @@ restarts discard sessions. Public high-traffic production requires additional
 operational hardening. Free-host cold starts and resource limits should be checked
 on the chosen host before presenting. `/health` checks liveness; also open the map
 and complete one demo after deployment to check data and solver readiness.
+
+### Environment configuration
+
+No custom Environment Variables are required on Render. Render supplies `PORT`;
+the server already defaults to `HOST=0.0.0.0`. `.env.example` lists only optional
+existing overrides with empty values: `API_BASE_URL`, `ALLOWED_ORIGINS`, `MAP_DATA`.
+Leave them unset for the combined web service. An empty `MAP_DATA` uses the bundled
+OSM; relative overrides (including `--map-data`) resolve from the project root,
+independent of the working directory. No API keys or database credentials are used.
+
+Current scenario evidence and reproduction commands: [SCENARIO_TIMING_VERIFICATION.md](SCENARIO_TIMING_VERIFICATION.md). Vehicle 5 detects with two deliveries remaining; Vehicle 1 proactively avoids the edge, while Vehicle 4 retains its route.

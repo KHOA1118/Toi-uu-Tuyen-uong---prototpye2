@@ -1,0 +1,44 @@
+{
+  "outcome": "ROLE-BASED FALLBACK READY",
+  "primary_exact_roles_passed": false,
+  "official_fixture_replaced": false,
+  "selected_candidate": "data/final_role_candidates/candidate-1.json",
+  "selected_validation": "data/final_role_candidates/validation-1.json",
+  "actual_roles": {
+    "detector": 6,
+    "affected": [
+      2,
+      3
+    ]
+  },
+  "browser_verification": "data/final_role_candidates/browser-verification.json",
+  "budget_exhausted": true,
+  "layout_evaluations": 624,
+  "unique_inputs": 622,
+  "natural_role_inputs_replayed": 56,
+  "full_fallback_simulations": 6,
+  "automated_fallback_passes": 2,
+  "deterministic_replay_matches": true,
+  "fixture_hashes_before": {
+    "data\\presentation_scenario.json": "6bda3937dd4b75203870991f34946c4dd178f76c3ff1fe5649fc753153e4a420",
+    "data\\scenario_validation.json": "26819076d0dfb4fca454ad2b37487e2f605d5eed35144f1a59003cd18a3a247f"
+  },
+  "fixture_hashes_after": {
+    "data\\presentation_scenario.json": "6bda3937dd4b75203870991f34946c4dd178f76c3ff1fe5649fc753153e4a420",
+    "data\\scenario_validation.json": "26819076d0dfb4fca454ad2b37487e2f605d5eed35144f1a59003cd18a3a247f"
+  },
+  "core_sha256": "6fcf578392f8fe8fad195c07abf97c2d8034c1218051ae20dd659d799418ef21",
+  "python_tests": {
+    "total": 92,
+    "passed": 90,
+    "skipped": 2,
+    "failed": 0
+  },
+  "node_tests": {
+    "total": 32,
+    "passed": 31,
+    "failed": 1,
+    "failure": "Unchanged official seed-54 strict presentation acceptance"
+  },
+  "preview_url": "http://127.0.0.1:8017/"
+}

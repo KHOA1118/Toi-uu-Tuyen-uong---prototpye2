@@ -1,3 +1,5 @@
+> Historical report: current scenario and measured mid-delivery behavior are documented in [SCENARIO_TIMING_VERIFICATION.md](SCENARIO_TIMING_VERIFICATION.md). Old hotspot/timing claims below are superseded.
+
 # Demo refinement verification
 
 Verified 2026-09-18. This report supersedes the earlier Milestone 8 timing and Euclidean initial-demo descriptions.

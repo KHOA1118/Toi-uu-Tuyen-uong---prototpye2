@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const {Simulation}=require('../frontend/simulation.js');
 const {Dashboard,costs}=require('../frontend/dashboard.js');
 const MapData=require('../frontend/map-data.js');
+const Visual=require('../frontend/presentation.js');
 const base=process.env.LNS_TEST_URL || 'http://127.0.0.1:8008';
 async function get(path) {const r=await fetch(base+path); assert.ok(r.ok); return r.json();}
 async function post(path,body) {const r=await fetch(base+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); const data=await r.json(); assert.ok(r.ok,JSON.stringify(data)); if(r.status===202){for(;;){await new Promise(r=>setTimeout(r,100));const j=await get(`/api/jobs/${data.job_id}`);if(j.status==='completed')return j.result;if(j.status==='failed')throw Error(j.error);}}return data;}
@@ -51,7 +52,17 @@ test('real OSM moving fleet -> incident -> real LNS -> continuous completion, re
     const result=await pending;
     assert.ok(result.updates.length,JSON.stringify(result.failures));
     const before=sim.snapshot(), untouched=sim.plans.map(p=>JSON.stringify(p));
+    const visualBefore=Visual.capture(sim.routes,before),oldVisual=JSON.stringify(visualBefore);
     sim.applyReoptimization(result);
+    const runtimeBeforeVisual=JSON.stringify({routes:sim.routes,plans:sim.plans,clocks:sim.clocks});
+    const visualChanges=Visual.changes(visualBefore,sim.routes,sim.snapshot(),result.updates);
+    assert.equal(JSON.stringify({routes:sim.routes,plans:sim.plans,clocks:sim.clocks}),runtimeBeforeVisual,'visual helper cannot mutate simulation');
+    assert.equal(JSON.stringify(visualBefore),oldVisual,'old suffix remains a stable copy');
+    for(const c of visualChanges){
+      assert.ok(result.updates.some(u=>u.route_index===c.index));
+      assert.deepEqual(c.position,before[c.index].position,'change marker uses physical apply position');
+      assert.deepEqual(c.next,Visual.future(sim.routes[c.index],sim.snapshot()[c.index]));
+    }
     dashboard.applied(result,sim.elapsed);
     assert.equal(dashboard.runtime,result.elapsed_seconds);
     assert.ok(dashboard.affected>=dashboard.rerouted);

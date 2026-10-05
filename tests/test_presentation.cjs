@@ -41,8 +41,9 @@ test('three real road-cost LNS demos: hidden physics, two telemetry intervals, a
   }
   assert.ok(detected,'vehicle reaches hidden incident');
   assert.equal(detected.detected_vehicle,5);
-  const vehicle2=sim.snapshot().find(v=>v.vehicleId===2);
-  assert.notEqual(vehicle2.status,'completed');assert.ok(vehicle2.progress<1);
+  const detector=sim.snapshot().find(v=>v.vehicleId===5);
+  assert.notEqual(detector.status,'completed');assert.ok(detector.progress<1);
+  assert.ok(detector.served.length>=1);assert.ok(4-detector.served.length>=2);
   const detectionMs=sim.elapsed;
   assert.ok(evidence.filter(e=>e.observed_ratio<=.5).length>=2);
   assert.ok(Math.abs(evidence.at(-1).observed_ratio-1/3)<1e-6);
@@ -59,7 +60,6 @@ test('three real road-cost LNS demos: hidden physics, two telemetry intervals, a
   assert.equal((await api('/api/traffic/applied',{session_id:session.session_id,job_id:queued.job_id})).lifecycle,'ROUTES_UPDATED');
   assert.ok(dashboard.rerouted>0);assert.ok(dashboard.before.travel>dashboard.after.travel);
   for(let t=0;t<600000&&sim.status!=='completed';t+=100)advance(100);
-  assert.ok(completionTimes[2]>completionTimes[5],JSON.stringify(completionTimes));
   assert.equal(sim.status,'completed');assert.deepEqual(dashboard.live(sim,24),{active:0,remaining:0});
   const report={frame,detectionMs,detectedVehicle:detected.detected_vehicle,completionTimes,affected:dashboard.affected,rerouted:dashboard.rerouted,initialSeconds:initial.initial_pipeline_seconds,geometrySeconds:initial.geometry_seconds,reoptSeconds:result.elapsed_seconds,workerPid:result.worker_pid,summary:run.summary(dashboard)};runs.push(report);console.log(JSON.stringify(report));
  }
@@ -73,11 +73,62 @@ test('scenario timing evidence uses real Simulation across frame sizes and solve
  const evidence=require('../data/scenario_validation.json');
  for(const [frame,solveAdvanceMs] of [[17,0],[50,500],[100,2500]]){
   const report=await validateScenario(fixture,{base,frame,solveAdvanceMs});
-  assert.equal(report.accepted,true,JSON.stringify(report));
+  assert.equal(report.mid_delivery_accepted,true,JSON.stringify(report));
+  assert.equal(report.detected_vehicle,5);
+  assert.ok(report.detected_vehicle_served_count>=1);
+  assert.ok(report.detected_vehicle_remaining_count>=2);
+  assert.equal(report.incident_on_return_to_depot,false);
+  assert.ok(report.incident_leg_from_stop>0&&report.incident_leg_to_stop>0);
+  assert.ok(report.incident_initial_vehicle_count>=3);
+  assert.ok(report.proactive_candidate_vehicle_ids.length>=2);
+  assert.ok(report.proactive_rerouted_vehicle_count>=1);
+  assert.equal(report.injection_snapshot[4].edgeId,fixture.event.edge_id);
+  assert.ok(report.detection_ms>report.injection_ms+500);
+  for(const id of report.proactive_rerouted_vehicle_ids){
+   const v=report.incident_vehicles.find(v=>v.vehicle_id===id);
+   assert.notEqual(id,5);assert.equal(v.incident_edge_already_traversed,false);
+   assert.equal(v.incident_edge_ahead_at_detection,true);
+   assert.ok(v.remaining_customers_at_detection.length>0);
+   assert.equal(v.route_contains_incident_before,true);assert.equal(v.route_contains_incident_after,false);
+   assert.equal(v.route_changed_after_reoptimization,true);
+  }
+  assert.deepEqual(report.initial_routes,evidence.initial_routes);
+  assert.deepEqual(report.proactive_rerouted_vehicle_ids,evidence.proactive_rerouted_vehicle_ids);
+  assert.deepEqual(report.proactive_candidate_vehicle_ids,evidence.proactive_candidate_vehicle_ids);
+  assert.equal(report.all_customers_completed,true);
+  assert.equal(report.positions_preserved,true);assert.equal(report.committed_segments_preserved,true);
+  assert.equal(report.served_customers_preserved,true);assert.equal(report.ownership_preserved,true);
+  assert.deepEqual(report.reoptimization_failures,[]);
   if(frame===50){
    assert.equal(report.detection_ms,evidence.detection_ms);
    assert.deepEqual(report.vehicle_completion_ms,evidence.vehicle_completion_ms);
    assert.equal(report.detected_vehicle,evidence.detected_vehicle);
   }
  }
+});
+
+
+test('future incident evidence excludes past traversals but includes the next edge during service',()=>{
+ const {incidentPathState}=require('../tools/validate_presentation.cjs');
+ assert.deepEqual(incidentPathState(['hot','other','hot'],{segment:1,edgeId:'other',edgeFraction:.2},'hot'),{incident_edge_already_traversed:true,incident_edge_ahead_at_detection:true});
+ assert.deepEqual(incidentPathState(['other','hot'],{segment:1,edgeId:null,edgeFraction:.5},'hot'),{incident_edge_already_traversed:false,incident_edge_ahead_at_detection:true});
+ assert.deepEqual(incidentPathState(['other','hot'],{segment:1,edgeId:'hot',edgeFraction:.2},'hot'),{incident_edge_already_traversed:true,incident_edge_ahead_at_detection:false});
+});
+
+
+test('current presentation has two distant proactive vehicles and spatially distinct detours',async()=>{
+ const {validateScenario}=require('../tools/validate_presentation.cjs');
+ const report=await validateScenario(await api('/api/presentation-scenario'),{base});
+ assert.equal(report.accepted,true,JSON.stringify({seed:report.configuration_seed,failures:report.acceptance_failures,detours:report.detours.map(v=>({id:v.vehicle_id,unique:v.unique_new_geometry_m,ratio:v.changed_geometry_ratio})),distinct:report.distinct_detours}));
+ for(const id of [1,4]){
+  const v=report.fleet_evidence_at_detection.find(v=>v.vehicleId===id),d=report.detours.find(v=>v.vehicle_id===id);
+  assert.ok(v.distance_to_incident_m>=300);assert.equal(v.incident_edge_current,false);
+  assert.equal(v.incident_edge_already_traversed,false);assert.equal(v.incident_edge_ahead_at_detection,true);
+  assert.notEqual(v.status,'completed');assert.ok(v.remaining_customers.length>0);
+  assert.equal(d.update_received,true);assert.equal(d.old_contains_incident,true);assert.equal(d.new_contains_incident,false);
+  assert.ok(d.unique_new_geometry_m>=300);assert.ok(d.changed_geometry_ratio>=.15);
+ }
+ assert.equal(report.distinct_detours.meaningfully_distinct,true);
+ assert.ok(report.distinct_detours.vehicle_1_spatially_separated_novel_m>=250);
+ assert.ok(report.distinct_detours.vehicle_4_spatially_separated_novel_m>=250);
 });

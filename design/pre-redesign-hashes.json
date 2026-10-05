@@ -1,0 +1,32 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "FE1A0D2B7FB16DAB232344E3541F279C699933A7CC28536E41E8D44FFDE5DA12",
+    "Path": "C:\\Users\\Khoa\\Documents\\ChatGPT\\LNS route\\frontend\\app.js"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "7E25E65609DE626E695CA8560A42943C4340B76209BDAABA5842A04D4B4E99E5",
+    "Path": "C:\\Users\\Khoa\\Documents\\ChatGPT\\LNS route\\frontend\\dashboard.js"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "C75FD5C740742971FA35F654BF7671789730A38D0EBD8CE93515E1067B0E290A",
+    "Path": "C:\\Users\\Khoa\\Documents\\ChatGPT\\LNS route\\frontend\\map-data.js"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A7A9213F2F70396849ECBA69BCF849E09A92093F3E4275DF6A73E0C2F885229B",
+    "Path": "C:\\Users\\Khoa\\Documents\\ChatGPT\\LNS route\\frontend\\presentation.js"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "070017C93A7C8B5D74796AFD24BE09AFF3F6828ECBEAAB551E373AC42BDE1270",
+    "Path": "C:\\Users\\Khoa\\Documents\\ChatGPT\\LNS route\\frontend\\simulation.js"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6FCF578392F8FE8FAD195C07ABF97C2D8034C1218051AE20DD659D799418EF21",
+    "Path": "C:\\Users\\Khoa\\Documents\\ChatGPT\\LNS route\\lns\\core.py"
+  }
+]

@@ -193,7 +193,7 @@ class PipelineTests(unittest.TestCase):
         self.assertGreater(changed["objective"][1], baseline["objective"][1])
 
     def test_homberger_subset_real_data(self):
-        source = Path("D:/homberger_1000_customer_instances.zip")
+        source = ROOT / "data/reference/homberger_1000_customer_instances.zip"
         if not source.exists():
             self.skipTest("User's Homberger archive is not present")
         with zipfile.ZipFile(source) as archive:
@@ -213,7 +213,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(sorted(n for r in result["routes"] for n in r if n), list(range(1, 11)))
 
     def test_original_functions_unchanged(self):
-        source = Path("D:/base_vrp+lns_(refined).py")
+        source = ROOT / "data/reference/base_vrp+lns_(refined).py"
         if not source.exists():
             self.skipTest("Original export is optional outside the owner's machine")
         original_text = source.read_text(encoding="utf-8-sig")

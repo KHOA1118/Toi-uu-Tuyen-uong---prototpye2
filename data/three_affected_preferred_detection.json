@@ -1,0 +1,194 @@
+{
+  "passed": true,
+  "incident": "osm:1294874724:4:r",
+  "detector": 5,
+  "detection_ms": 67189,
+  "detector_snapshot": {
+    "vehicleId": 5,
+    "routeIndex": 4,
+    "segmentCount": 360,
+    "served": [
+      15,
+      5
+    ],
+    "position": {
+      "lat": 10.753682107019554,
+      "lon": 106.72003018454056
+    },
+    "segment": 238,
+    "edgeId": "osm:1294874724:4:r",
+    "edgeFraction": 0.5578853836718727,
+    "stopId": 21,
+    "status": "moving",
+    "progress": 0.6597308047291643
+  },
+  "initial_orders": [
+    [
+      0,
+      2,
+      11,
+      10,
+      12,
+      0
+    ],
+    [
+      0,
+      6,
+      16,
+      24,
+      4,
+      0
+    ],
+    [
+      0,
+      23,
+      7,
+      13,
+      14,
+      0
+    ],
+    [
+      0,
+      19,
+      17,
+      1,
+      9,
+      0
+    ],
+    [
+      0,
+      15,
+      5,
+      21,
+      3,
+      0
+    ],
+    [
+      0,
+      8,
+      22,
+      20,
+      18,
+      0
+    ]
+  ],
+  "samples": [
+    {
+      "time_ms": 63189,
+      "vehicles": [],
+      "evidence": []
+    },
+    {
+      "time_ms": 63689,
+      "vehicles": [],
+      "evidence": []
+    },
+    {
+      "time_ms": 64189,
+      "vehicles": [],
+      "evidence": []
+    },
+    {
+      "time_ms": 64689,
+      "vehicles": [],
+      "evidence": []
+    },
+    {
+      "time_ms": 65189,
+      "vehicles": [],
+      "evidence": []
+    },
+    {
+      "time_ms": 65689,
+      "vehicles": [],
+      "evidence": []
+    },
+    {
+      "time_ms": 66189,
+      "vehicles": [
+        {
+          "vehicleId": 5,
+          "routeIndex": 4,
+          "segmentCount": 360,
+          "served": [
+            15,
+            5
+          ],
+          "position": {
+            "lat": 10.753973705446073,
+            "lon": 106.72026253078847
+          },
+          "segment": 238,
+          "edgeId": "osm:1294874724:4:r",
+          "edgeFraction": 0.16934650756276579,
+          "stopId": 21,
+          "status": "moving",
+          "progress": 0.6564104904783987
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "time_ms": 66689,
+      "vehicles": [
+        {
+          "vehicleId": 5,
+          "routeIndex": 4,
+          "segmentCount": 360,
+          "served": [
+            15,
+            5
+          ],
+          "position": {
+            "lat": 10.753827906232814,
+            "lon": 106.72014635766452
+          },
+          "segment": 238,
+          "edgeId": "osm:1294874724:4:r",
+          "edgeFraction": 0.3636159456173192,
+          "stopId": 21,
+          "status": "moving",
+          "progress": 0.6580706476037815
+        }
+      ],
+      "evidence": [
+        {
+          "vehicle_id": 5,
+          "observed_ratio": 0.33333333333343074,
+          "interval_ms": 500
+        }
+      ]
+    },
+    {
+      "time_ms": 67189,
+      "vehicles": [
+        {
+          "vehicleId": 5,
+          "routeIndex": 4,
+          "segmentCount": 360,
+          "served": [
+            15,
+            5
+          ],
+          "position": {
+            "lat": 10.753682107019554,
+            "lon": 106.72003018454056
+          },
+          "segment": 238,
+          "edgeId": "osm:1294874724:4:r",
+          "edgeFraction": 0.5578853836718727,
+          "stopId": 21,
+          "status": "moving",
+          "progress": 0.6597308047291643
+        }
+      ],
+      "evidence": [
+        {
+          "vehicle_id": 5,
+          "observed_ratio": 0.3333333333334309,
+          "interval_ms": 500
+        }
+      ]
+    }
+  ]
+}

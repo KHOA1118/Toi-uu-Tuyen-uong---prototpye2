@@ -6,7 +6,7 @@ from unittest.mock import patch
 from urllib.request import Request,urlopen
 from urllib.error import HTTPError
 from server import HTTPServer,Handler,parse_server_args
-from deployment_config import api_base_url,allowed_origins
+from deployment_config import api_base_url,allowed_origins,map_data_path,ROOT
 
 class DeploymentTests(unittest.TestCase):
     def test_preview_bind_defaults(self):
@@ -25,6 +25,15 @@ class DeploymentTests(unittest.TestCase):
         with patch.dict(os.environ, {'HOST':'0.0.0.0','PORT':'10000'}):
             args=parse_server_args(['--host','127.0.0.1','--port','8124'])
         self.assertEqual((args.host,args.port),('127.0.0.1',8124))
+
+    def test_map_override_relative_to_project_not_cwd(self):
+        with patch.dict(os.environ, {'MAP_DATA':'data/raw/hcm_map4.osm'}):
+            with patch('os.getcwd', return_value=str(ROOT.parent)):
+                self.assertEqual(parse_server_args([]).map_data, ROOT/'data/raw/hcm_map4.osm')
+        with patch.dict(os.environ, {'MAP_DATA':''}):
+            self.assertEqual(map_data_path(), ROOT/'data/raw/hcm_map4.osm')
+        self.assertEqual(map_data_path(ROOT/'custom.osm'), ROOT/'custom.osm')
+        self.assertEqual(parse_server_args(['--map-data','custom.osm']).map_data,ROOT/'custom.osm')
 
     def setUp(self):
         self.server=HTTPServer(('127.0.0.1',0),Handler)

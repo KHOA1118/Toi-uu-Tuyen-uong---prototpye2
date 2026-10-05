@@ -1,86 +1,71 @@
-# Vehicle 2 / Vehicle 5 scenario verification
+# Mid-delivery congestion: measured scenario verification
 
-The deterministic input search selected configuration seed 44 instead of 42.
-LNS still assigns customers and builds every route. No algorithm, frontend,
-simulation, telemetry, routing or job implementation was changed for this task.
-Uncommitted frontend redesign changes belong to the preceding task.
+This report supersedes the previous Vehicle 2 / Vehicle 5 completion-order goal.
+Configuration seed 54; LNS seed 42; 80 iterations.
+The original LNS core, road routing, Simulation, telemetry, and UI are unchanged.
 
-## Timing evidence
+## Why the old scenario failed the new story
+The prior configuration (44) detected at 88.5 s on customer 10 -> depot 0.
+Vehicle 5 had served 4 customers, with 0 remaining. Its validator only required
+Vehicle 2 to finish later; static road sharing did not prove proactive avoidance.
 
-Measured using the real frontend Simulation and backend telemetry/LNS APIs,
-with 50 ms simulation steps, the existing 700 ms detection display delay and
-500 ms simulated solver-response delay. Completion is the first completed
-snapshot (up to one frame of observation resolution); browser timing may vary.
+## Actual measured evidence
+- Directed OSM incident edge: `osm:221308781:1:f`.
+- Vehicle 5 delivery leg: 5 -> 21 (customer -> customer).
+- Physical injection: 62.689 s, after Vehicle 5 enters the edge.
+- Telemetry detection: 64.189 s; detector 5, served 2, remaining 2.
+- Initial edge users: [1, 4, 5].
+- Other active vehicles with unserved customers and an untraversed future incident edge: [1, 4].
+- Proactive avoidance: [1]. Vehicle 1 contains edge before, not after; geometry changes.
+- Vehicle 4 does not avoid the edge; do not claim two proactive reroutes.
+- Fleet served/unserved at detection: 12/12.
+- Completion times in milliseconds (50 ms steps, 500 ms solver advance): {'1': 129489, '2': 150000.0000000001, '3': 103489, '4': 138739, '5': 101989, '6': 126789}.
+- Completed dynamic LNS solves: 2; failures: [].
+- All 24 customers served exactly once; six loads of 40 (4 customers of demand 10).
 
-| Measurement | Previous | New |
-| --- | ---: | ---: |
-| Vehicle 2 returns to depot | 96,600 ms | 132,100 ms |
-| Vehicle 5 returns to depot | 99,600 ms | 104,250 ms |
-| Detection timestamp | 84,500 ms | 88,500 ms |
-| Detecting vehicle | 5 | 5 |
-| Vehicle 2 active at detection | yes | yes |
-| Vehicle 2 progress at detection | 87.50% | 67.02% |
-| Vehicle 2 finishes after Vehicle 5 | no | yes, by 27,850 ms |
+Lifecycle: INACTIVE -> ACTIVE_UNDETECTED -> DETECTED -> REOPTIMIZING -> ROUTES_UPDATED.
+Telemetry keeps its original 500 ms interval and two consecutive abnormal ratios.
+The slowdown is 1/3 expected speed; no route or known cost changes before detection.
+The existing 700 ms detection display and solver safety horizon remain unchanged.
+Validator checks exact position and served-set preservation at apply, committed
+prefixes, stable ownership, capacity, feasible LNS outputs, and final coverage.
 
-The old scenario already detected congestion before Vehicle 2 finished, but
-Vehicle 2 had little work left and returned before Vehicle 5. The new input
-leaves Vehicle 2 visibly delivering throughout detection and after Vehicle 5
-returns, without artificial delays or predefined output routes.
+`data/scenario_validation.json` is generated evidence, including actual initial
+routes, edge sequences, injection/detection snapshots, and per-vehicle future paths.
+`data/presentation_scenario.json` contains inputs/event configuration, not solutions.
 
-## Input and constraints
+## Reproduce
+Run the backend on port 8016 and set `LNS_TEST_URL=http://127.0.0.1:8016`.
 
-- 24 customers, 6 vehicles, capacity 40, demand 10 per customer, demand 0 at depot.
-- Feasible real initial LNS: [4, 4, 4, 4, 4, 4] customers per vehicle;
-  every customer served exactly once.
-- Depot and customer 1 unchanged; customer IDs 2–24 use newly sampled real OSM
-  nodes. Full old/new mapping: `changed_input_locations` in the validation JSON.
-- Same incident edge: `osm:1218673270:6:r` (366439129 → 366473777).
-  Initial users now 1, 4, 5, previously 1, 5, 6.
-- Factor 3, injection at 5 s, telemetry every 500 ms, threshold 50%, two abnormal
-  intervals. Physical state stays separate from optimizer-known costs.
-- Existing overlap/corridor acceptance criteria preserved.
-
-## Files changed in this task
-
-- `tools/design_root_scenario.py`: input-only search, geometric prefilters,
-  actual end-to-end timing acceptance before writing fixtures; CLI node/server
-  and seed-range options. Search tried 42, 43, 44 and accepted 44.
-- `tools/validate_presentation.cjs`: reusable real Simulation/backend validator;
-  explicit solver-delay parameter is for tests, never production behavior.
-- `data/presentation_scenario.json`: generated seed-44 input fixture.
-- `data/scenario_validation.json`: generated timing, overlap, previous baseline
-  and location-change evidence. No fabricated measurements.
-- `tests/test_presentation.cjs`: feasibility/counts/capacity, vehicle 5 detection,
-  vehicle 2 active progress and completion-order assertions; unchanged routes
-  and unpublished costs before detection; lifecycle and evidence validation.
-- This report.
-
-## Commands and results
-
-```powershell
-python tools/design_root_scenario.py --node <path-to-node> --base-url http://127.0.0.1:8013
+```text
+python tools/design_root_scenario.py --start-seed 54 --end-seed 55 --min-proactive 1 --base-url http://127.0.0.1:8016 --node /path/to/node
 node tools/validate_presentation.cjs data/presentation_scenario.json
-python -m unittest discover -s tests -q
-$env:LNS_TEST_URL='http://127.0.0.1:8013'
 node --test tests/test_presentation.cjs
 node --test tests/*.cjs
+python -m unittest discover -s tests -q
 git diff --check
 ```
 
-Full Python suite: 64/64 passed. Full Node suite: 26/26 passed.
-Timing regression covers 17/50/100 ms frames and 0/500/2500 ms solver delays.
-The 50 ms / 500 ms run reproduces the generated completion evidence exactly.
-Premature reoptimization remains rejected; routes stay identical and known
-revision/costs stay unchanged until detection. Replacement routes preserve
-positions and served customers, and the fleet completes all deliveries.
+Generator defaults to requiring two proactive reroutes. Search of seeds 42–108
+(with early physical injection) and 109–159 (with injection after edge entry)
+did not find that preferred result. Seed 54 satisfies every mandatory condition;
+`--min-proactive 1` explicitly selects that permitted minimum. No solver output was
+edited and no speeds, arbitrary waits, assignments or telemetry were fabricated.
 
-Lifecycle: INACTIVE → ACTIVE_UNDETECTED → DETECTED → REOPTIMIZING → ROUTES_UPDATED.
+## Browser
+A complete live browser run served all customers and returned every vehicle.
+UI timeline: detection 65.7 s, reoptimization 66.4 s, apply 67.9 s; browser/network
+latency differs from deterministic validator stepping. Vehicle 5 was observed
+serving customers before the hotspot and continuing deliveries after the update.
+Summary reports one rerouted vehicle and 1.4 seconds modeled travel savings.
+No console errors. Transient physical slowdown is additionally verified by the
+real telemetry evidence and unchanged simulation, rather than inferred from UI text.
 
-Manual check: run `python server.py --port 8013`, open the local preview and
-click **Chạy kịch bản mẫu**. Around 88.5 s Vehicle 5 confirms the slowdown;
-around 104.3 s it is back while Vehicle 2 remains active until about 132.1 s.
-
-Browser verification after restart: detection at 88.5 s, reoptimization started
-at 89.2 s and applied at 89.9 s. At 119.7 s Vehicle 5 was at the depot while
-Vehicle 2 was still returning (segment 409/446). All vehicles finished at
-149.8 s, with 0 customers remaining and no JavaScript console errors.
+## Final regression results (2026-09-27)
+- Python: 68 discovered, 66 passed, 2 optional original-input provenance tests skipped.
+- Node full suite: 27 passed, 0 failed.
+- Presentation-specific suite: 4 passed, 0 failed.
+- Independent validator output matches every saved evidence field exactly.
+- `git diff --check`: PASS.
+- `lns/core.py` SHA256: `6fcf578392f8fe8fad195c07abf97c2d8034c1218051ae20dd659d799418ef21` (unchanged).
+- Existing uncommitted Render configuration changes are separate from this scenario task.

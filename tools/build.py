@@ -8,14 +8,14 @@ import re
 import shutil
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from deployment_config import api_base_url, allowed_origins
+from deployment_config import api_base_url, allowed_origins, map_data_path
 
 ROOT=Path(__file__).resolve().parents[1]
 
 def build():
     api_base_url(); allowed_origins()
     fixture=json.loads((ROOT/'data/presentation_scenario.json').read_text(encoding='utf-8'))
-    source=Path(os.getenv('MAP_DATA',str(ROOT/'data/raw/hcm_map4.osm')))
+    source=map_data_path()
     if not source.is_file():raise ValueError('Missing raw OSM: include data/raw/hcm_map4.osm in the deployment')
     if hashlib.sha256(source.read_bytes()).hexdigest()!=fixture['source_sha256']:raise ValueError('OSM does not match fixed presentation scenario')
     for folder in ['lns','road_network']:

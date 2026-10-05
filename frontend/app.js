@@ -7,6 +7,143 @@ let reoptimizationPending = false;
 let demo = null;
 let demoSetupPending = false;
 let optimizationLoading = false;
+const story={phase:'READY',detector:null,edge:null,focus:new Set(),changes:[],detectedAt:0,appliedAt:0};
+let storyTimer=null,revealTimer=null,cameraFrame=null,labelFrame=null;
+function storyPhase(phase,count=0){
+  story.phase=phase;
+  const phases=['ACTIVE','DETECTED','REOPTIMIZING','ROUTES_UPDATED'],at=phases.indexOf(phase);
+  $('map-timeline').dataset.phase=phase;
+  [...$('map-timeline').children].forEach((el,i)=>{el.classList.toggle('current',i===at);el.classList.toggle('done',i<at);el.setAttribute('aria-current',i===at?'step':'false');});
+  $('story-updated').textContent=phase==='ROUTES_UPDATED'?`${count} tuyến đã cập nhật`:'Đã cập nhật tuyến';
+}
+function resetStory(){
+  clearTimeout(storyTimer);clearTimeout(revealTimer);cancelAnimationFrame(cameraFrame);cameraFrame=null;
+  Object.assign(story,{detector:null,edge:null,focus:new Set(),changes:[],detectedAt:0,appliedAt:0});
+  for(const id of ['ghost-layer','new-route-layer','callout-layer'])$(id).replaceChildren();
+  for(const id of ['ghost-layer','new-route-layer','callout-layer'])$(id).classList.remove('story-fade');
+  $('route-comparison-key').hidden=true;storyPhase('READY');renderStoryFocus();
+}
+function screenPoint(p){const [x,y]=MapData.displayProjection(state.network)(p);return [x*state.zoom+state.tx,y*state.zoom+state.ty];}
+let nodeDisplayCache={key:null,nodes:[]};
+function layoutLabels(){
+  if(!state.network)return;
+  const originalNodes=state.nodes.map(n=>{const [x,y]=screenPoint(n);return {id:n.id,x,y,text:n.id===0?'DEPOT':String(n.id)};});
+  const map=$('network-map'),rect=map.getBoundingClientRect();
+  const key=JSON.stringify([originalNodes,state.zoom,map.clientWidth,map.clientHeight]);
+  if(nodeDisplayCache.key!==key){
+    const obstacles=[...document.querySelectorAll('.map-tools button,[data-vehicle-id]')].map(el=>{
+      const r=el.getBoundingClientRect();return {x:r.x-rect.x,y:r.y-rect.y,w:r.width,h:r.height};
+    });
+    nodeDisplayCache={key,nodes:DemoPresentation.declutterNodes(originalNodes,obstacles)};
+  }
+  const nodes=nodeDisplayCache.nodes;
+  nodes.forEach((n,i)=>{
+    const group=$('customer-layer').querySelector(`[data-node-id="${n.id}"]`);
+    if(!group)return;
+    const original=originalNodes[i],x=(n.x-state.tx)/state.zoom,y=(n.y-state.ty)/state.zoom;
+    group.style.transform=`translate(${x}px,${y}px)`;
+    group.dataset.displayDx=n.dx;group.dataset.displayDy=n.dy;
+    let leader=$('customer-layer').querySelector(`[data-node-leader="${n.id}"]`);
+    if(!leader){leader=svgElement('line',{'data-node-leader':n.id,class:'node-leader','vector-effect':'non-scaling-stroke'});$('customer-layer').prepend(leader);}
+    for(const [name,value] of Object.entries({x1:(original.x-state.tx)/state.zoom,y1:(original.y-state.ty)/state.zoom,x2:x,y2:y}))leader.setAttribute(name,value);
+    leader.style.display=Math.hypot(n.dx,n.dy)>6?'':'none';
+  });
+  const segments=[];
+  for(const r of state.geometry?.[state.mode==='before'?'initial_routes':'routes']||[]){const p=r.coordinates.map(([lon,lat])=>screenPoint({lon,lat}));for(let i=1;i<p.length;i++)segments.push([p[i-1],p[i]]);}
+  for(const p of DemoPresentation.placeLabels(nodes,segments,$('network-map').clientWidth,$('network-map').clientHeight)){
+    const el=$('customer-layer').querySelector(`[data-node-id="${p.id}"] .node-label`);
+    // SVG text x/y attributes work consistently; CSS geometry properties do not
+    // position <text> in all browsers. Only label offsets are changed here.
+    if(el){el.setAttribute('x',p.dx/state.zoom);el.setAttribute('y',p.dy/state.zoom);}
+  }
+  layoutStoryCallouts();
+}
+function layoutStoryCallouts(){
+  const map=$('network-map'),placed=[],w=map.clientWidth,h=map.clientHeight;
+  const overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+  for(const g of $('callout-layer').querySelectorAll('.story-callout')){
+    const [x,y]=screenPoint({lon:Number(g.dataset.lon),lat:Number(g.dataset.lat)}),bw=Number(g.dataset.width),bh=Number(g.dataset.height);
+    const options=[[14,-bh-12],[-bw-14,-bh-12],[14,16],[-bw-14,16],[-bw/2,-bh-45],[-bw/2,45],[35,-bh/2],[-bw-35,-bh/2]];
+    let best;
+    for(let i=0;i<options.length;i++){
+      const [dx,dy]=options[i],box={x:Math.max(8,Math.min(w-bw-8,x+dx)),y:Math.max(8,Math.min(h-bh-8,y+dy)),w:bw,h:bh};
+      const score=placed.filter(b=>overlap(box,b)).length*10000+Math.hypot(box.x-x-dx,box.y-y-dy)+i;
+      if(!best||score<best.score)best={...box,score};
+    }
+    placed.push(best);const dx=best.x-x,dy=best.y-y;
+    const rect=g.querySelector('rect');rect.setAttribute('x',dx);rect.setAttribute('y',dy);
+    [...g.querySelectorAll('text')].forEach((text,i)=>{text.setAttribute('x',dx+10);text.setAttribute('y',dy+18+i*18);});
+    const line=g.querySelector('line');line.setAttribute('x2',Math.max(dx,Math.min(dx+bw,0)));line.setAttribute('y2',Math.max(dy,Math.min(dy+bh,0)));
+  }
+}
+function storyCamera(coordinates,maxZoom=6){
+  if(!coordinates.length)return;cancelAnimationFrame(cameraFrame);cameraFrame=null;
+  const project=MapData.displayProjection(state.network),p=coordinates.map(([lon,lat])=>project({lon,lat}));
+  const xs=p.map(p=>p[0]),ys=p.map(p=>p[1]),w=$('network-map').clientWidth,h=$('network-map').clientHeight;
+  const zoom=Math.min(maxZoom,(w-140)/Math.max(80,Math.max(...xs)-Math.min(...xs)),(h-130)/Math.max(80,Math.max(...ys)-Math.min(...ys)));
+  const target={zoom,tx:w/2-zoom*(Math.min(...xs)+Math.max(...xs))/2,ty:h/2-zoom*(Math.min(...ys)+Math.max(...ys))/2};
+  const from={zoom:state.zoom,tx:state.tx,ty:state.ty},start=performance.now(),duration=matchMedia('(prefers-reduced-motion: reduce)').matches?0:650;
+  function frame(now){const t=duration?Math.min(1,(now-start)/duration):1,e=1-(1-t)**3;for(const k of ['zoom','tx','ty'])state[k]=from[k]+(target[k]-from[k])*e;transformView();if(t<1)cameraFrame=requestAnimationFrame(frame);else {cameraFrame=null;layoutLabels();}}
+  cameraFrame=requestAnimationFrame(frame);
+}
+function storyPolyline(layer,coords,attrs){
+  const project=MapData.displayProjection(state.network);
+  const el=svgElement('polyline',{points:coords.map(([lon,lat])=>project({lon,lat}).join(',')).join(' '),fill:'none','vector-effect':'non-scaling-stroke','stroke-linejoin':'round','stroke-linecap':'round',...attrs});
+  $(layer).append(el);return el;
+}
+function storyCallout(position,title,subtitle='',kind=''){
+  const [x,y]=MapData.displayProjection(state.network)(position),g=svgElement('g',{transform:`translate(${x} ${y})`,class:`story-callout ${kind}`});
+  const box=svgElement('g',{class:'story-callout-box'}),width=Math.max(title.length*6.5,subtitle.length*6)+22;
+  Object.assign(g.dataset,{lon:position.lon,lat:position.lat,width,height:subtitle?48:26});
+  box.append(svgElement('line',{x1:0,y1:0,x2:12,y2:-12,stroke:'#8896a7','stroke-width':1}));
+  box.append(svgElement('rect',{x:12,y:subtitle?-59:-35,width,height:subtitle?48:26,rx:6}));
+  box.append(svgElement('text',{x:22,y:subtitle?-40:-17},title));
+  if(subtitle)box.append(svgElement('text',{x:22,y:-22,class:'secondary'},subtitle));
+  g.append(box);$('callout-layer').append(g);
+}
+function renderStoryFocus(){
+  const focused=story.focus.size>0&&state.mode==='after'&&['DETECTED','REOPTIMIZING','ROUTES_UPDATED'].includes(story.phase);
+  const revealing=story.appliedAt&&performance.now()-story.appliedAt<800&&state.mode==='after';
+  document.querySelectorAll('[data-route-index]').forEach(el=>{const i=Number(el.dataset.routeIndex),selected=state.route===null||state.route===i;const hideForReveal=revealing&&story.changes.some(c=>c.index===i);el.style.transition=hideForReveal?'none':'';el.style.opacity=hideForReveal?0:selected?(focused&&!story.focus.has(i+1)?.22:.98):.15;});
+  document.querySelectorAll('.unchanged-future').forEach(el=>el.style.display=revealing?'':'none');
+  document.querySelectorAll('[data-route-history]').forEach(el=>el.style.opacity=focused?.15:.32);
+  document.querySelectorAll('[data-vehicle-id]').forEach(el=>el.style.opacity=focused&&!story.focus.has(Number(el.dataset.vehicleId))?.25:(state.route===null||state.route===Number(el.dataset.vehicleId)-1?1:.2));
+  for(const id of ['ghost-layer','new-route-layer','callout-layer'])$(id).style.display=state.mode==='before'?'none':'';
+}
+function showDetected(result){
+  story.detector=result.detected_vehicle;story.edge=demo.fixture.event.edge_id;story.detectedAt=performance.now();
+  story.focus=new Set(simulation.snapshot().filter(v=>simulation.routes[v.routeIndex].edge_ids.slice(v.segment).includes(story.edge)).map(v=>v.vehicleId));story.focus.add(story.detector);
+  storyPhase('DETECTED');
+  const edge=state.network.edges[story.edge],a=state.network.nodes[edge.from_node],b=state.network.nodes[edge.to_node];
+  storyCallout({lon:(a.lon+b.lon)/2,lat:(a.lat+b.lat)/2},`⚠ Xe ${story.detector} phát hiện ùn tắc`,'Thời gian di chuyển ×3','detection-callout');
+  const detector=simulation.snapshot().find(v=>v.vehicleId===story.detector);
+  storyCamera([[a.lon,a.lat],[b.lon,b.lat],...(detector?[[detector.position.lon,detector.position.lat]]:[])],Math.min(2.2,state.zoom*1.7));
+  layoutStoryCallouts();renderStoryFocus();
+}
+function showRouteChanges(before,result){
+  story.changes=DemoPresentation.changes(before,simulation.routes,simulation.snapshot(),result.updates);story.appliedAt=performance.now();
+  storyPhase('ROUTES_UPDATED',story.changes.length);
+  for(const id of ['ghost-layer','new-route-layer'])$(id).replaceChildren();
+  $('callout-layer').querySelectorAll('.change-callout').forEach(el=>el.remove());
+  story.focus=new Set([story.detector].filter(Number.isFinite));
+  const coordinates=[];
+  for(const c of story.changes){
+    story.focus.add(c.index+1);coordinates.push(...c.coordinates,...c.next.coordinates);
+    storyPolyline('ghost-layer',c.coordinates,{stroke:'#788494','stroke-width':4,'stroke-dasharray':'7 5',class:'old-future','data-old-vehicle':c.index+1});
+    storyPolyline('new-route-layer',c.next.coordinates,{stroke:routeColor(c.index),'stroke-width':5,pathLength:1,class:'new-detour','data-new-vehicle':c.index+1});
+    storyCallout(c.position,`↗ Xe ${c.index+1} · Đổi tuyến`,'','change-callout');
+  }
+  if(story.edge){const e=state.network.edges[story.edge];for(const id of [e.from_node,e.to_node]){const n=state.network.nodes[id];coordinates.push([n.lon,n.lat]);}}
+  for(const v of simulation.snapshot())if(story.focus.has(v.vehicleId))coordinates.push([v.position.lon,v.position.lat]);
+  if(story.changes.length)storyCamera(coordinates);
+  $('route-comparison-key').hidden=!story.changes.length;layoutStoryCallouts();renderStoryFocus();
+  clearTimeout(revealTimer);revealTimer=setTimeout(renderStoryFocus,810);
+  clearTimeout(storyTimer);storyTimer=setTimeout(()=>{
+    for(const id of ['ghost-layer','new-route-layer','callout-layer'])$(id).classList.add('story-fade');
+    renderStoryFocus();
+    storyTimer=setTimeout(()=>{for(const id of ['ghost-layer','new-route-layer','callout-layer']){$(id).replaceChildren();$(id).classList.remove('story-fade');}$('route-comparison-key').hidden=true;},600);
+  },4200);
+}
 const API_BASE_URL = (window.APP_CONFIG?.API_BASE_URL || '').replace(/\/$/, '');
 async function boundedFetch(path, options={}) {
   try {
@@ -48,6 +185,7 @@ async function sendTelemetry(run){
       if(result.lifecycle==='DETECTED'){
         run.lifecycle='DETECTED';run.sampleQueue=[];
         incidentState=result.known_state;simulation.setIncidentState(incidentState);dashboard.incident(simulation);
+        showDetected(result);
         $('demo-status').textContent='Phát hiện bất thường tốc độ';$('incident-status').textContent='Phát hiện bất thường tốc độ';
         renderIncidents();renderDashboard();
         setTimeout(()=>{if(run.active&&demo===run){run.lifecycle='REOPTIMIZING';$('demo-status').textContent='Đang tái tối ưu tuyến...';reoptimizeFleet();}},700);
@@ -62,6 +200,7 @@ function demoControls(){
   if(demo?.active) for(const id of ['incident-submit','incident-context','incident-type','reoptimize','sim-start','sim-pause','sim-resume','sim-reset','show-before','show-after']) $(id).disabled=true;
 }
 function stopDemo(message){
+  if(story.phase!=='ROUTES_UPDATED')resetStory();
   if(demo) demo.active=false;
   stopClock();simulation?.pause();
   $('demo-status').textContent=message;
@@ -126,6 +265,7 @@ async function reoptimizeFleet() {
   $('reopt-status').textContent = 'Thuật toán thật đang tối ưu phần giao hàng còn lại… Xe tiếp tục đoạn đường đã đi vào, rồi chuyển tuyến tại nút tiếp theo.';
   try {
     const vehicles = active.beginReoptimization(state.scenario);
+    storyPhase('REOPTIMIZING');
     dashboard.begin(active,vehicles,state.network,incidentState); renderDashboard();
     decisionCapture = dashboard.capture;
     const result=await runJob('/api/reoptimize',{session_id:incidentState.session_id,revision,scenario:state.scenario,vehicles});
@@ -133,8 +273,10 @@ async function reoptimizeFleet() {
     if (active !== simulation || revision !== incidentState.revision) throw new Error('Trạng thái đã thay đổi; hãy thử lại');
     if(demo?.active && result.failures.length)throw new Error('Có xe chưa tìm được tuyến hợp lệ; chưa áp dụng kết quả demo.');
     if (active.status === 'running') { const now=performance.now(); active.advance(Math.max(0,now-simulationTimestamp)); simulationTimestamp=now; }
+    const visualBefore=DemoPresentation.capture(active.routes,active.snapshot());
     const applyStarted=performance.now();
     const geometry = active.applyReoptimization(result);
+    showRouteChanges(visualBefore,result);
     result.frontend_application_ms=performance.now()-applyStarted;
     dashboard.applied(result,active.elapsed);
     if(demo?.active){
@@ -188,7 +330,8 @@ function renderIncidents() {
   const project = MapData.displayProjection(state.network);
   for (const e of Object.values(incidentState.edge_overrides)) {
     const a = project(state.network.nodes[e.from_node]), b = project(state.network.nodes[e.to_node]);
-    const line = svgElement('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--color-danger)','stroke-width':5,'stroke-dasharray':'5 3','vector-effect':'non-scaling-stroke','data-incident-edge':e.edge_id});
+    layer.append(svgElement('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:'incident-halo','vector-effect':'non-scaling-stroke'}));
+    const line = svgElement('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--color-danger)','stroke-width':5,class:story.edge===e.edge_id&&performance.now()-story.detectedAt<2000?'incident-detected':'','vector-effect':'non-scaling-stroke','data-incident-edge':e.edge_id});
     line.append(svgElement('title',{},`${e.edge_id} · ${e.available ? `thời gian ×${e.travel_time_factor}` : 'Bị chặn'}`)); layer.append(line);
   }
   for (const incident of incidentState.incidents) {
@@ -230,6 +373,7 @@ function stopClock() {
   simulationFrame = null; simulationTimestamp = null;
 }
 function prepareSimulation() {
+  resetStory();
   stopClock();
   simulation = state.geometry ? new VehicleSimulation.Simulation(state.geometry.routes, state.network, {stops:state.scenario.stops,durationMs:demo?.fixture?.duration_ms || 180000}) : null;
   $('reoptimize').disabled = !simulation || reoptimizationPending;
@@ -256,7 +400,7 @@ function tickSimulation(timestamp) {
   renderSimulation();
   if (simulation.status === 'running') simulationFrame = requestAnimationFrame(tickSimulation);
 }
-function runClock() { simulationTimestamp = performance.now(); simulationFrame = requestAnimationFrame(tickSimulation); }
+function runClock() { if(story.phase==='READY')storyPhase('ACTIVE'); simulationTimestamp = performance.now(); simulationFrame = requestAnimationFrame(tickSimulation); }
 let lastSimulationPaint=0;
 function renderSimulation() {
   if(simulation?.status==='running' && performance.now()-lastSimulationPaint<50)return;
@@ -277,8 +421,13 @@ function renderSimulation() {
   for (const v of simulation.snapshot()) {
     const [x, y] = project(v.position);
     const marker = svgElement('g', {transform: `translate(${x} ${y})`, 'data-vehicle-id': v.vehicleId, 'data-segment': v.segment, 'data-edge-id': v.edgeId || '', 'data-lat': v.position.lat, 'data-lon': v.position.lon, 'data-status': v.status, opacity: state.route === null || state.route === v.routeIndex ? 1 : .2});
-    marker.append(svgElement('rect', {x: -9, y: -7, width: 18, height: 14, rx: 4, fill: routeColor(v.routeIndex), stroke: 'white', 'stroke-width': 2, 'vector-effect': 'non-scaling-stroke'}));
-    marker.append(svgElement('text', {'text-anchor': 'middle', y: 4, fill: 'white', 'font-size': 10, 'font-weight': 700}, String(v.vehicleId)));
+    const symbol=svgElement('g',{class:'vehicle-symbol'});marker.append(symbol);
+    if(v.vehicleId===story.detector&&performance.now()-story.detectedAt<4500){
+      symbol.append(svgElement('circle',{r:19,fill:'#ef4444',opacity:.2,class:'detector-warning-halo','data-detector-halo':v.vehicleId}));
+      symbol.append(svgElement('text',{x:0,y:-23,'text-anchor':'middle',fill:'#b91c1c','font-size':9,'font-weight':700},'PHÁT HIỆN'));
+    }
+    symbol.append(svgElement('rect', {x: -9, y: -7, width: 18, height: 14, rx: 4, fill: routeColor(v.routeIndex), stroke: 'white', 'stroke-width': 2, 'vector-effect': 'non-scaling-stroke'}));
+    symbol.append(svgElement('text', {'text-anchor': 'middle', y: 4, fill: 'white', 'font-size': 10, 'font-weight': 700}, String(v.vehicleId)));
     marker.append(svgElement('title', {}, `Xe ${v.vehicleId} - đoạn ${v.segment}/${v.segmentCount}`)); layer.append(marker);
     const row = document.createElement('p'); row.className = 'vehicle-row'; row.style.borderLeftColor = routeColor(v.routeIndex);
     const activity = v.status === 'blocked' ? 'Dừng do chặn đường' : v.status === 'slowed' ? 'Đi chậm do sự cố' : v.status === 'servicing' ? `Giao khách ${v.stopId}` : v.status === 'completed' ? 'Đã về depot' : v.status === 'ready' ? 'Tại depot' : (v.stopId < 0 ? 'Đến nút chuyển tuyến' : `Đến khách ${v.stopId || 'depot'}`);
@@ -286,11 +435,12 @@ function renderSimulation() {
     row.title = `${v.position.lat.toFixed(6)}, ${v.position.lon.toFixed(6)} - ${v.edgeId || 'Dừng'}`;
     $('vehicle-list').append(row);
   }
+  renderStoryFocus();
 }
 $('sim-start').addEventListener('click', () => { simulation?.start(); if (simulation?.status === 'running' && simulationFrame === null) {dashboard.moving(simulation.elapsed);runClock();} renderSimulation(); });
 $('sim-pause').addEventListener('click', () => { if (simulation?.status === 'running') { simulation.advance(performance.now() - simulationTimestamp); simulation.pause(); } stopClock(); renderSimulation(); });
 $('sim-resume').addEventListener('click', () => { if (simulation?.status === 'paused') { simulation.resume(); runClock(); } renderSimulation(); });
-$('sim-reset').addEventListener('click', () => { stopClock(); simulation?.reset(); if(state.result)dashboard.initial(state.geometry,state.result,state.network,incidentState); renderSimulation(); });
+$('sim-reset').addEventListener('click', () => { resetStory(); stopClock(); simulation?.reset(); if(state.result)dashboard.initial(state.geometry,state.result,state.network,incidentState); renderSimulation(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && simulation?.status === 'running') $('sim-pause').click(); });
 const palette = ['#2563EB','#0EA5A8','#16A34A','#F59E0B','#7C3AED','#E11D48'];
 function routeColor(i) { return palette[i] || `hsl(${(i * 137.508) % 360} 65% 38%)`; }
@@ -302,6 +452,7 @@ function svgElement(tag, attributes, text) {
   return node;
 }
 function resetView() {
+  cancelAnimationFrame(cameraFrame);cameraFrame=null;
   if(!state.network||!state.nodes.length){state.zoom=1;state.tx=state.ty=0;transformView();return;}
   const project=MapData.displayProjection(state.network);
   const coordinates=[...state.nodes.map(n=>[n.lon,n.lat]),...(state.geometry?.[state.mode==='before'?'initial_routes':'routes']||[]).flatMap(r=>r.coordinates)];
@@ -309,15 +460,17 @@ function resetView() {
   const xs=p.map(p=>p[0]),ys=p.map(p=>p[1]);const minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
   const map=$('network-map'),w=map.clientWidth||800,h=map.clientHeight||680;
   map.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  state.zoom=Math.min(w*.84/Math.max(maxx-minx,1),h*.84/Math.max(maxy-miny,1));
+  state.zoom=Math.min(Math.max(w-120,100)/Math.max(maxx-minx,1),Math.max(h-100,100)/Math.max(maxy-miny,1));
   state.tx=w/2-state.zoom*(minx+maxx)/2;state.ty=h/2-state.zoom*(miny+maxy)/2;transformView();
 }
 function transformView() {
   $('network-map').style.setProperty('--map-zoom',state.zoom);
   $('map-world').setAttribute('transform', `translate(${state.tx} ${state.ty}) scale(${state.zoom})`);
   $('zoom-level').textContent = `${Math.round(state.zoom * 100)}%`;
+  if(!cameraFrame){cancelAnimationFrame(labelFrame);labelFrame=requestAnimationFrame(layoutLabels);}
 }
 function zoomBy(factor, x = $('network-map').clientWidth/2, y = $('network-map').clientHeight/2) {
+  cancelAnimationFrame(cameraFrame);cameraFrame=null;
   const next = Math.max(0.5, Math.min(6, state.zoom * factor));
   const ratio = next / state.zoom;
   state.tx = x - (x - state.tx) * ratio;
@@ -328,7 +481,7 @@ function svgPoint(event) {
   return new DOMPoint(event.clientX, event.clientY).matrixTransform($('network-map').getScreenCTM().inverse());
 }
 function renderMap() {
-  const world = $('overlay-layer'); world.replaceChildren();
+  const world = $('overlay-layer'); world.replaceChildren(); $('customer-layer').replaceChildren();
   $('map-empty').style.display = state.nodes.length ? 'none' : '';
   if (!state.nodes.length) return;
   const project = MapData.displayProjection(state.network);
@@ -359,9 +512,9 @@ function renderMap() {
     group.append(svgElement('text', {x: 8, y: -8, class: 'node-label'}, n.id === 0 ? 'DEPOT' : String(n.id)));
     group.addEventListener('click', () => selectNode(n.id));
     group.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectNode(n.id); } });
-    world.append(group);
+    $('customer-layer').append(group);
   });
-  transformView();renderRouteProgress();
+  transformView();renderRouteProgress();renderStoryFocus();
 }
 function renderRouteProgress(){
   if(!simulation||!state.geometry||state.mode==='before')return;
@@ -466,7 +619,7 @@ $('zoom-out').addEventListener('click', () => zoomBy(1 / 1.3));
 $('fit').addEventListener('click', resetView);
 const svg = $('network-map'); let drag = null;
 svg.addEventListener('wheel', event => { event.preventDefault(); const p = svgPoint(event); zoomBy(event.deltaY < 0 ? 1.12 : 1 / 1.12, p.x, p.y); }, {passive: false});
-svg.addEventListener('pointerdown', event => { if (event.button !== 0 || event.target.closest('.node-marker')) return; const p = svgPoint(event); drag = {id: event.pointerId, x: p.x, y: p.y, tx: state.tx, ty: state.ty}; svg.setPointerCapture(event.pointerId); });
+svg.addEventListener('pointerdown', event => { if (event.button !== 0 || event.target.closest('.node-marker')) return; const p = svgPoint(event); cancelAnimationFrame(cameraFrame);cameraFrame=null; drag = {id: event.pointerId, x: p.x, y: p.y, tx: state.tx, ty: state.ty}; svg.setPointerCapture(event.pointerId); });
 svg.addEventListener('pointermove', event => { if (!drag || drag.id !== event.pointerId) return; const p = svgPoint(event); state.tx = drag.tx + p.x - drag.x; state.ty = drag.ty + p.y - drag.y; transformView(); });
 function endDrag() { drag = null; }
 svg.addEventListener('pointerup', endDrag); svg.addEventListener('pointercancel', endDrag); svg.addEventListener('lostpointercapture', endDrag);
@@ -584,22 +737,42 @@ function renderBusinessMetrics(live){
   $('kpi-affected').textContent=dashboard.before?dashboard.affected:'—';
   const before=dashboard.before?.travel,after=dashboard.after?.travel;
   $('kpi-saved').textContent=Number.isFinite(before)&&Number.isFinite(after)?fmt(before-after,60,' phút'):'—';
-  const signature=JSON.stringify([dashboard.before,dashboard.after,dashboard.rerouted,dashboard.scope]);
+  const fleet=simulation?.routes?.length||state.geometry?.routes?.length||0;
+  const signature=JSON.stringify([dashboard.before,dashboard.after,dashboard.rerouted,dashboard.scope,fleet]);
   if(signature===chartSignature)return;chartSignature=signature;
   const chart=$('comparison-chart');chart.replaceChildren();
-  const rows=[['Quãng đường',dashboard.before?.distance,dashboard.after?.distance,1000,' km'],['Thời gian',before,after,60,' phút'],['Xe đổi tuyến',dashboard.before?0:null,dashboard.after?dashboard.rerouted:null,1,' xe']];
-  for(const [label,a,b,scale,unit] of rows){
-    const row=document.createElement('div');row.className='chart-row';
-    const title=document.createElement('h3');title.textContent=label;row.append(title);
+  const make=(tag,cls,text)=>{const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=text;return e;};
+  const number=value=>value.toLocaleString('vi-VN',{maximumFractionDigits:1,minimumFractionDigits:1});
+  const distanceDelta=Number.isFinite(dashboard.before?.distance)&&Number.isFinite(dashboard.after?.distance)?(dashboard.after.distance-dashboard.before.distance)/1000:null;
+  const timeDelta=Number.isFinite(before)&&Number.isFinite(after)?(after-before)/60:null;
+  for(const [label,a,b,scale,unit] of [['Quãng đường',dashboard.before?.distance,dashboard.after?.distance,1000,'km'],['Thời gian',before,after,60,'phút']]){
+    const card=make('article','comparison-card');card.append(make('h3','',label));
+    const plot=make('div','vertical-comparison');plot.setAttribute('role','img');
+    plot.setAttribute('aria-label',`${label}: Trước ${fmt(a,scale,' '+unit)}, Sau ${fmt(b,scale,' '+unit)}`);
     const max=Math.max(Number.isFinite(a)?a:0,Number.isFinite(b)?b:0,1);
     for(const [value,name,kind] of [[a,'Trước','before'],[b,'Sau','after']]){
-      const line=document.createElement('div');line.className='bar-line';
-      const text=document.createElement('span');text.textContent=name;
-      const track=document.createElement('div');track.className='bar-track';
-      const bar=document.createElement('div');bar.className='bar '+kind;bar.style.width=Number.isFinite(value)?`${Math.max(0,value)/max*100}%`:'0%';track.append(bar);
-      const number=document.createElement('strong');number.textContent=fmt(value,scale,unit);
-      line.append(text,track,number);row.append(line);
-    }chart.append(row);
+      const column=make('div','comparison-column');
+      const track=make('div','vertical-track');const bar=make('div','vertical-bar '+kind);
+      bar.style.height=Number.isFinite(value)?`${Math.max(0,value)/max*76}%`:'0%';
+      bar.append(make('strong','bar-value',fmt(value,scale,' '+unit)));track.append(bar);
+      column.append(track,make('span','bar-label',name));plot.append(column);
+    }
+    const delta=Number.isFinite(a)&&Number.isFinite(b)?(b-a)/scale:null;
+    const caption=make('p','comparison-delta'+(label==='Thời gian'&&delta<0?' time-saving':''),delta===null?'Chờ dữ liệu so sánh':`${delta>0?'+':delta<0?'−':''}${number(Math.abs(delta))} ${unit}`);
+    card.append(plot,caption);chart.append(card);
   }
-  $('chart-scope').textContent=dashboard.scope?dashboard.scope+' · Xe đổi tuyến so với kế hoạch tại mốc so sánh.':'Chạy kịch bản để xem dữ liệu thực.';
+  const count=dashboard.after?dashboard.rerouted:null,ratio=count!==null&&fleet>0?count/fleet:null;
+  const card=make('article','comparison-card');card.append(make('h3','','Xe đổi tuyến'));
+  const donut=make('div','fleet-donut');donut.style.setProperty('--fleet-share',`${Math.max(0,Math.min(1,ratio??0))*100}%`);
+  donut.setAttribute('role','img');donut.setAttribute('aria-label',ratio===null?'Chưa có dữ liệu xe đổi tuyến':`${count} trên ${fleet} xe đổi tuyến`);
+  const center=make('div','donut-center');center.append(make('strong','',ratio===null?'—':`${count} / ${fleet}`),make('span','','xe đổi tuyến'));donut.append(center);
+  card.append(donut,make('p','comparison-delta',ratio===null?'Chờ dữ liệu so sánh':`${(ratio*100).toLocaleString('vi-VN',{maximumFractionDigits:1})}% đội xe được điều chỉnh`));chart.append(card);
+  let insight='Chạy kịch bản để xem dữ liệu thực.';
+  if(distanceDelta!==null&&timeDelta!==null){
+    const distanceText=Math.abs(distanceDelta)<.05?'Quãng đường gần như không đổi':`${distanceDelta>0?'Đi xa hơn':'Đi ngắn hơn'} ${number(Math.abs(distanceDelta))} km`;
+    const timeText=Math.abs(timeDelta)<.05?'thời gian gần như không đổi':`${timeDelta<0?'tiết kiệm':'tăng'} ${number(Math.abs(timeDelta))} phút`;
+    insight=`${distanceText} ${distanceDelta>0&&timeDelta<0?'nhưng':'và'} ${timeText}${distanceDelta>0&&timeDelta<0&&dashboard.scope?.includes('còn lại')?' nhờ tránh khu vực ùn tắc':''}.`;
+  }
+  $('chart-scope').textContent=insight;
+  $('chart-scope').title=dashboard.scope||'';
 }

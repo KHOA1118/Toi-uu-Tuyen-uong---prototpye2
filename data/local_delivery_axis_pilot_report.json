@@ -1,0 +1,2159 @@
+{
+  "source_sha256": "a8f1c6a74e6fb1eb0d952a3d34d6794ec6d630283be21a699824cf1597eb89fa",
+  "retained_candidates": [
+    [
+      "osm:722241447:2:f",
+      43
+    ],
+    [
+      "osm:722241447:0:f",
+      37
+    ],
+    [
+      "osm:722241447:0:f",
+      45
+    ]
+  ],
+  "premise_correction": "All three reproduce shared V1/V4/V5 usage, but V5 is NOT earlier than both peers.",
+  "fixture_hashes_before": {
+    "presentation_scenario.json": "6bda3937dd4b75203870991f34946c4dd178f76c3ff1fe5649fc753153e4a420",
+    "scenario_validation.json": "26819076d0dfb4fca454ad2b37487e2f605d5eed35144f1a59003cd18a3a247f"
+  },
+  "configurations_per_candidate": {
+    "osm:722241447:2:f/seed-43": 22
+  },
+  "full_simulations": 0,
+  "rejections": [
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 0,
+      "changes": [
+        {
+          "customer_id": 16,
+          "old_osm_node_id": "2153453268",
+          "new_osm_node_id": "2156217188",
+          "region": "after",
+          "radius_m": 1070.5806085706686
+        },
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "2153453368",
+          "region": "after",
+          "radius_m": 868.1335645780828
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          8,
+          15,
+          2,
+          3,
+          0
+        ],
+        [
+          0,
+          12,
+          24,
+          9,
+          23,
+          0
+        ],
+        [
+          0,
+          10,
+          22,
+          11,
+          16,
+          0
+        ],
+        [
+          0,
+          4,
+          5,
+          18,
+          17,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ],
+        [
+          0,
+          1,
+          14,
+          6,
+          20,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 1,
+      "changes": [
+        {
+          "customer_id": 2,
+          "old_osm_node_id": "11341095964",
+          "new_osm_node_id": "11340986951",
+          "region": "before",
+          "radius_m": 938.7882381428446
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "11692780901",
+          "region": "after",
+          "radius_m": 921.8075607411462
+        },
+        {
+          "customer_id": 20,
+          "old_osm_node_id": "1987340072",
+          "new_osm_node_id": "6775399893",
+          "region": "after",
+          "radius_m": 308.01018561824765
+        },
+        {
+          "customer_id": 5,
+          "old_osm_node_id": "366423603",
+          "new_osm_node_id": "5778455242",
+          "region": "after",
+          "radius_m": 505.46154204505467
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          24,
+          12,
+          9,
+          1,
+          0
+        ],
+        [
+          0,
+          4,
+          14,
+          5,
+          6,
+          0
+        ],
+        [
+          0,
+          10,
+          8,
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          18,
+          17,
+          15,
+          23,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          11,
+          20,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 2,
+      "changes": [
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "2177985965",
+          "region": "before",
+          "radius_m": 815.0100386160864
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "11341010490",
+          "region": "before",
+          "radius_m": 397.75556979911727
+        },
+        {
+          "customer_id": 22,
+          "old_osm_node_id": "2303302820",
+          "new_osm_node_id": "11201507189",
+          "region": "central",
+          "radius_m": 1021.5330368456592
+        },
+        {
+          "customer_id": 14,
+          "old_osm_node_id": "5778363315",
+          "new_osm_node_id": "366464743",
+          "region": "after",
+          "radius_m": 702.8136000073789
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "8360095071",
+          "region": "after",
+          "radius_m": 1009.835580007205
+        },
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "6775375681",
+          "region": "after",
+          "radius_m": 732.2720603766197
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          3,
+          7,
+          1,
+          22,
+          0
+        ],
+        [
+          0,
+          14,
+          16,
+          11,
+          10,
+          0
+        ],
+        [
+          0,
+          5,
+          18,
+          2,
+          15,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          23,
+          0
+        ],
+        [
+          0,
+          17,
+          24,
+          12,
+          9,
+          0
+        ],
+        [
+          0,
+          8,
+          4,
+          20,
+          6,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 3,
+      "changes": [
+        {
+          "customer_id": 5,
+          "old_osm_node_id": "366423603",
+          "new_osm_node_id": "4947229071",
+          "region": "before",
+          "radius_m": 624.0835956368456
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "10876578697",
+          "region": "before",
+          "radius_m": 671.8829718196029
+        },
+        {
+          "customer_id": 8,
+          "old_osm_node_id": "2295387415",
+          "new_osm_node_id": "5778363314",
+          "region": "central",
+          "radius_m": 1052.4881446633735
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "2156217562",
+          "region": "after",
+          "radius_m": 532.8491143347476
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "366376755",
+          "region": "after",
+          "radius_m": 789.2204299591647
+        },
+        {
+          "customer_id": 1,
+          "old_osm_node_id": "2305841737",
+          "new_osm_node_id": "6783171963",
+          "region": "after",
+          "radius_m": 1063.339585918333
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "6774975811",
+          "region": "after",
+          "radius_m": 259.28724057540546
+        },
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "2154852569",
+          "region": "after",
+          "radius_m": 843.488222666399
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          10,
+          5,
+          2,
+          4,
+          0
+        ],
+        [
+          0,
+          8,
+          21,
+          19,
+          7,
+          0
+        ],
+        [
+          0,
+          3,
+          24,
+          12,
+          9,
+          0
+        ],
+        [
+          0,
+          20,
+          13,
+          17,
+          1,
+          0
+        ],
+        [
+          0,
+          22,
+          18,
+          16,
+          15,
+          0
+        ],
+        [
+          0,
+          23,
+          11,
+          14,
+          6,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 4,
+      "changes": [
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "1987339773",
+          "region": "after",
+          "radius_m": 294.461836136521
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "6772925089",
+          "region": "after",
+          "radius_m": 585.656335902444
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          8,
+          15,
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          18,
+          5,
+          4,
+          10,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          1,
+          23,
+          0
+        ],
+        [
+          0,
+          14,
+          11,
+          20,
+          6,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 5,
+      "changes": [
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "12959329687",
+          "region": "before",
+          "radius_m": 1008.6380196335873
+        },
+        {
+          "customer_id": 23,
+          "old_osm_node_id": "2159588403",
+          "new_osm_node_id": "2156217740",
+          "region": "after",
+          "radius_m": 285.91507071034926
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "6783826301",
+          "region": "after",
+          "radius_m": 650.2097169773668
+        },
+        {
+          "customer_id": 20,
+          "old_osm_node_id": "1987340072",
+          "new_osm_node_id": "1987339684",
+          "region": "after",
+          "radius_m": 681.6633922728811
+        }
+      ],
+      "reason": "V5_RETURN_LEG",
+      "details": {
+        "vehicle_5_service": {
+          "leg_index": 4,
+          "from_stop": 14,
+          "to_stop": 0,
+          "served_before": 4,
+          "remaining_customers": []
+        }
+      },
+      "initial_orders": [
+        [
+          0,
+          4,
+          15,
+          11,
+          2,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          3,
+          23,
+          0
+        ],
+        [
+          0,
+          5,
+          18,
+          20,
+          6,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          1,
+          10,
+          8,
+          14,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 6,
+      "changes": [
+        {
+          "customer_id": 23,
+          "old_osm_node_id": "2159588403",
+          "new_osm_node_id": "746617417",
+          "region": "before",
+          "radius_m": 1083.7142503578807
+        },
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "5772633620",
+          "region": "before",
+          "radius_m": 809.5118201215163
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "366440601",
+          "region": "central",
+          "radius_m": 787.4880877441129
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "366405747",
+          "region": "after",
+          "radius_m": 563.8331372259299
+        },
+        {
+          "customer_id": 6,
+          "old_osm_node_id": "2295367693",
+          "new_osm_node_id": "2156216858",
+          "region": "after",
+          "radius_m": 799.8459025580004
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "6783058410",
+          "region": "after",
+          "radius_m": 828.5995632602115
+        }
+      ],
+      "reason": "V5_RETURN_LEG",
+      "details": {
+        "vehicle_5_service": {
+          "leg_index": 4,
+          "from_stop": 20,
+          "to_stop": 0,
+          "served_before": 4,
+          "remaining_customers": []
+        }
+      },
+      "initial_orders": [
+        [
+          0,
+          22,
+          3,
+          11,
+          15,
+          0
+        ],
+        [
+          0,
+          16,
+          8,
+          23,
+          2,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          6,
+          13,
+          7,
+          1,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          18,
+          20,
+          0
+        ],
+        [
+          0,
+          5,
+          10,
+          4,
+          14,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 7,
+      "changes": [
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "11341095963",
+          "region": "before",
+          "radius_m": 297.08321642500835
+        },
+        {
+          "customer_id": 2,
+          "old_osm_node_id": "11341095964",
+          "new_osm_node_id": "6786275924",
+          "region": "before",
+          "radius_m": 467.3401082978294
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "5778362231",
+          "region": "central",
+          "radius_m": 874.4993905118853
+        },
+        {
+          "customer_id": 5,
+          "old_osm_node_id": "366423603",
+          "new_osm_node_id": "9731771609",
+          "region": "after",
+          "radius_m": 481.96778522395925
+        },
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "366376836",
+          "region": "after",
+          "radius_m": 1066.0330377482733
+        },
+        {
+          "customer_id": 1,
+          "old_osm_node_id": "2305841737",
+          "new_osm_node_id": "2156217499",
+          "region": "after",
+          "radius_m": 254.83258274744003
+        },
+        {
+          "customer_id": 22,
+          "old_osm_node_id": "2303302820",
+          "new_osm_node_id": "6775606512",
+          "region": "after",
+          "radius_m": 995.1182503452943
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "5772598992",
+          "region": "after",
+          "radius_m": 1081.496628434605
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          18,
+          10,
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          1,
+          0
+        ],
+        [
+          0,
+          16,
+          22,
+          11,
+          23,
+          0
+        ],
+        [
+          0,
+          14,
+          20,
+          7,
+          5,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          8,
+          4,
+          15,
+          6,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 8,
+      "changes": [
+        {
+          "customer_id": 23,
+          "old_osm_node_id": "2159588403",
+          "new_osm_node_id": "9584647836",
+          "region": "after",
+          "radius_m": 807.7045001926517
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "6773133397",
+          "region": "after",
+          "radius_m": 372.17634725499624
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          8,
+          15,
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          16,
+          4,
+          11,
+          0
+        ],
+        [
+          0,
+          10,
+          14,
+          20,
+          6,
+          0
+        ],
+        [
+          0,
+          5,
+          18,
+          17,
+          23,
+          0
+        ],
+        [
+          0,
+          22,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 9,
+      "changes": [
+        {
+          "customer_id": 14,
+          "old_osm_node_id": "5778363315",
+          "new_osm_node_id": "2899339670",
+          "region": "before",
+          "radius_m": 852.7220952572721
+        },
+        {
+          "customer_id": 23,
+          "old_osm_node_id": "2159588403",
+          "new_osm_node_id": "10910927599",
+          "region": "after",
+          "radius_m": 469.2195887554946
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "6775375684",
+          "region": "after",
+          "radius_m": 666.4599782587395
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "8347944524",
+          "region": "after",
+          "radius_m": 983.44441707664
+        }
+      ],
+      "reason": "V5_RETURN_LEG",
+      "details": {
+        "vehicle_5_service": {
+          "leg_index": 4,
+          "from_stop": 8,
+          "to_stop": 0,
+          "served_before": 4,
+          "remaining_customers": []
+        }
+      },
+      "initial_orders": [
+        [
+          0,
+          5,
+          18,
+          6,
+          20,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          10,
+          15,
+          2,
+          14,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          11,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          4,
+          23,
+          8,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 10,
+      "changes": [
+        {
+          "customer_id": 23,
+          "old_osm_node_id": "2159588403",
+          "new_osm_node_id": "1987339812",
+          "region": "before",
+          "radius_m": 323.88022062211866
+        },
+        {
+          "customer_id": 14,
+          "old_osm_node_id": "5778363315",
+          "new_osm_node_id": "11341010499",
+          "region": "before",
+          "radius_m": 789.9396145075698
+        },
+        {
+          "customer_id": 22,
+          "old_osm_node_id": "2303302820",
+          "new_osm_node_id": "11155476162",
+          "region": "central",
+          "radius_m": 635.7394184571256
+        },
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "5778820393",
+          "region": "after",
+          "radius_m": 920.6758330916531
+        },
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "6406622883",
+          "region": "after",
+          "radius_m": 760.1127806242012
+        },
+        {
+          "customer_id": 8,
+          "old_osm_node_id": "2295387415",
+          "new_osm_node_id": "366409109",
+          "region": "after",
+          "radius_m": 911.891660418728
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          15,
+          14,
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          4,
+          5,
+          18,
+          6,
+          0
+        ],
+        [
+          0,
+          16,
+          8,
+          1,
+          22,
+          0
+        ],
+        [
+          0,
+          11,
+          24,
+          12,
+          9,
+          0
+        ],
+        [
+          0,
+          23,
+          20,
+          10,
+          17,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 11,
+      "changes": [
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "1996653964",
+          "region": "before",
+          "radius_m": 711.1073650894768
+        },
+        {
+          "customer_id": 20,
+          "old_osm_node_id": "1987340072",
+          "new_osm_node_id": "5772092737",
+          "region": "before",
+          "radius_m": 910.85686149298
+        },
+        {
+          "customer_id": 6,
+          "old_osm_node_id": "2295367693",
+          "new_osm_node_id": "5778363301",
+          "region": "central",
+          "radius_m": 535.7642472439868
+        },
+        {
+          "customer_id": 23,
+          "old_osm_node_id": "2159588403",
+          "new_osm_node_id": "5778363279",
+          "region": "after",
+          "radius_m": 944.9725537774783
+        },
+        {
+          "customer_id": 8,
+          "old_osm_node_id": "2295387415",
+          "new_osm_node_id": "2304445541",
+          "region": "after",
+          "radius_m": 1081.9935636415144
+        },
+        {
+          "customer_id": 22,
+          "old_osm_node_id": "2303302820",
+          "new_osm_node_id": "7824664719",
+          "region": "after",
+          "radius_m": 519.6935309572073
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "366443410",
+          "region": "after",
+          "radius_m": 589.1709641961339
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "8347944525",
+          "region": "after",
+          "radius_m": 314.9825900274383
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          16,
+          11,
+          8,
+          18,
+          0
+        ],
+        [
+          0,
+          6,
+          23,
+          14,
+          20,
+          0
+        ],
+        [
+          0,
+          4,
+          10,
+          2,
+          3,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          22,
+          0
+        ],
+        [
+          0,
+          5,
+          7,
+          15,
+          1,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 12,
+      "changes": [
+        {
+          "customer_id": 22,
+          "old_osm_node_id": "2303302820",
+          "new_osm_node_id": "6786185146",
+          "region": "after",
+          "radius_m": 1073.1804684005715
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "366440375",
+          "region": "after",
+          "radius_m": 541.001167909655
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          23,
+          15,
+          2,
+          3,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          1,
+          5,
+          18,
+          6,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          11,
+          4,
+          0
+        ],
+        [
+          0,
+          8,
+          10,
+          14,
+          20,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 13,
+      "changes": [
+        {
+          "customer_id": 1,
+          "old_osm_node_id": "2305841737",
+          "new_osm_node_id": "366431432",
+          "region": "before",
+          "radius_m": 652.2754785336022
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "5778755617",
+          "region": "after",
+          "radius_m": 961.0888529986737
+        },
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "366390322",
+          "region": "after",
+          "radius_m": 982.203458138593
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "2156217503",
+          "region": "after",
+          "radius_m": 426.8589953752754
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          5,
+          1,
+          6,
+          20,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          18,
+          0
+        ],
+        [
+          0,
+          10,
+          8,
+          2,
+          3,
+          0
+        ],
+        [
+          0,
+          4,
+          14,
+          7,
+          11,
+          0
+        ],
+        [
+          0,
+          23,
+          15,
+          22,
+          16,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 14,
+      "changes": [
+        {
+          "customer_id": 20,
+          "old_osm_node_id": "1987340072",
+          "new_osm_node_id": "12606310379",
+          "region": "before",
+          "radius_m": 673.8642832585862
+        },
+        {
+          "customer_id": 1,
+          "old_osm_node_id": "2305841737",
+          "new_osm_node_id": "4947229069",
+          "region": "before",
+          "radius_m": 452.56331431498785
+        },
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "13040539202",
+          "region": "central",
+          "radius_m": 645.8367554367794
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "6783826301",
+          "region": "after",
+          "radius_m": 785.1995399881256
+        },
+        {
+          "customer_id": 22,
+          "old_osm_node_id": "2303302820",
+          "new_osm_node_id": "2304452078",
+          "region": "after",
+          "radius_m": 829.2437312376146
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "366387542",
+          "region": "after",
+          "radius_m": 502.7501085628867
+        }
+      ],
+      "reason": "V5_RETURN_LEG",
+      "details": {
+        "vehicle_5_service": {
+          "leg_index": 4,
+          "from_stop": 18,
+          "to_stop": 0,
+          "served_before": 4,
+          "remaining_customers": []
+        }
+      },
+      "initial_orders": [
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          16,
+          3,
+          11,
+          4,
+          0
+        ],
+        [
+          0,
+          15,
+          2,
+          1,
+          10,
+          0
+        ],
+        [
+          0,
+          14,
+          6,
+          7,
+          22,
+          0
+        ],
+        [
+          0,
+          8,
+          20,
+          5,
+          18,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          23,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 15,
+      "changes": [
+        {
+          "customer_id": 5,
+          "old_osm_node_id": "366423603",
+          "new_osm_node_id": "8359628509",
+          "region": "before",
+          "radius_m": 862.0982630688657
+        },
+        {
+          "customer_id": 16,
+          "old_osm_node_id": "2153453268",
+          "new_osm_node_id": "5778148625",
+          "region": "before",
+          "radius_m": 1020.0481180135173
+        },
+        {
+          "customer_id": 20,
+          "old_osm_node_id": "1987340072",
+          "new_osm_node_id": "11770443329",
+          "region": "central",
+          "radius_m": 906.9295733767459
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "9584647837",
+          "region": "after",
+          "radius_m": 1070.421699152461
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "5780792961",
+          "region": "after",
+          "radius_m": 668.1416699816946
+        },
+        {
+          "customer_id": 22,
+          "old_osm_node_id": "2303302820",
+          "new_osm_node_id": "9642676110",
+          "region": "after",
+          "radius_m": 525.4764278351254
+        },
+        {
+          "customer_id": 6,
+          "old_osm_node_id": "2295367693",
+          "new_osm_node_id": "6772277925",
+          "region": "after",
+          "radius_m": 345.3614830852332
+        },
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "9396986651",
+          "region": "after",
+          "radius_m": 873.2574642398337
+        }
+      ],
+      "reason": "V5_RETURN_LEG",
+      "details": {
+        "vehicle_5_service": {
+          "leg_index": 4,
+          "from_stop": 14,
+          "to_stop": 0,
+          "served_before": 4,
+          "remaining_customers": []
+        }
+      },
+      "initial_orders": [
+        [
+          0,
+          7,
+          15,
+          2,
+          5,
+          0
+        ],
+        [
+          0,
+          12,
+          24,
+          9,
+          23,
+          0
+        ],
+        [
+          0,
+          8,
+          16,
+          18,
+          17,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          1,
+          0
+        ],
+        [
+          0,
+          10,
+          11,
+          20,
+          14,
+          0
+        ],
+        [
+          0,
+          22,
+          4,
+          6,
+          3,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 16,
+      "changes": [
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "12408604175",
+          "region": "after",
+          "radius_m": 653.6613772450294
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "6772914381",
+          "region": "after",
+          "radius_m": 382.7684944242757
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          8,
+          4,
+          20,
+          6,
+          0
+        ],
+        [
+          0,
+          14,
+          3,
+          13,
+          7,
+          0
+        ],
+        [
+          0,
+          10,
+          5,
+          15,
+          2,
+          0
+        ],
+        [
+          0,
+          17,
+          24,
+          12,
+          9,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          1,
+          23,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          11,
+          18,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 17,
+      "changes": [
+        {
+          "customer_id": 1,
+          "old_osm_node_id": "2305841737",
+          "new_osm_node_id": "6856305879",
+          "region": "before",
+          "radius_m": 430.45913487259133
+        },
+        {
+          "customer_id": 14,
+          "old_osm_node_id": "5778363315",
+          "new_osm_node_id": "6782982335",
+          "region": "after",
+          "radius_m": 390.50029890895905
+        },
+        {
+          "customer_id": 10,
+          "old_osm_node_id": "3040289489",
+          "new_osm_node_id": "5780792999",
+          "region": "after",
+          "radius_m": 872.1439342697502
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "366438993",
+          "region": "after",
+          "radius_m": 377.61498733818104
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          7,
+          15,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          5,
+          18,
+          11,
+          16,
+          0
+        ],
+        [
+          0,
+          10,
+          21,
+          19,
+          13,
+          0
+        ],
+        [
+          0,
+          8,
+          4,
+          20,
+          6,
+          0
+        ],
+        [
+          0,
+          22,
+          3,
+          14,
+          23,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 18,
+      "changes": [
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "9396986648",
+          "region": "before",
+          "radius_m": 863.568525877773
+        },
+        {
+          "customer_id": 11,
+          "old_osm_node_id": "366476091",
+          "new_osm_node_id": "11341010698",
+          "region": "before",
+          "radius_m": 466.9496878402516
+        },
+        {
+          "customer_id": 14,
+          "old_osm_node_id": "5778363315",
+          "new_osm_node_id": "2026784260",
+          "region": "central",
+          "radius_m": 719.422336580983
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "716313348",
+          "region": "after",
+          "radius_m": 446.51848723984824
+        },
+        {
+          "customer_id": 1,
+          "old_osm_node_id": "2305841737",
+          "new_osm_node_id": "11399987264",
+          "region": "after",
+          "radius_m": 1024.3558012226404
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "10774483263",
+          "region": "after",
+          "radius_m": 974.2248357968263
+        }
+      ],
+      "reason": "V5_RETURN_LEG",
+      "details": {
+        "vehicle_5_service": {
+          "leg_index": 4,
+          "from_stop": 6,
+          "to_stop": 0,
+          "served_before": 4,
+          "remaining_customers": []
+        }
+      },
+      "initial_orders": [
+        [
+          0,
+          14,
+          3,
+          2,
+          11,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          5,
+          18,
+          1,
+          23,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ],
+        [
+          0,
+          8,
+          10,
+          20,
+          6,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          15,
+          4,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 19,
+      "changes": [
+        {
+          "customer_id": 20,
+          "old_osm_node_id": "1987340072",
+          "new_osm_node_id": "11341010446",
+          "region": "before",
+          "radius_m": 398.8999070683449
+        },
+        {
+          "customer_id": 16,
+          "old_osm_node_id": "2153453268",
+          "new_osm_node_id": "2026783573",
+          "region": "before",
+          "radius_m": 411.73099058590327
+        },
+        {
+          "customer_id": 6,
+          "old_osm_node_id": "2295367693",
+          "new_osm_node_id": "1992606696",
+          "region": "central",
+          "radius_m": 679.5313507203648
+        },
+        {
+          "customer_id": 1,
+          "old_osm_node_id": "2305841737",
+          "new_osm_node_id": "2156217904",
+          "region": "after",
+          "radius_m": 397.76622005416397
+        },
+        {
+          "customer_id": 8,
+          "old_osm_node_id": "2295387415",
+          "new_osm_node_id": "366440760",
+          "region": "after",
+          "radius_m": 509.60499525380243
+        },
+        {
+          "customer_id": 15,
+          "old_osm_node_id": "366461456",
+          "new_osm_node_id": "2156217822",
+          "region": "after",
+          "radius_m": 252.98406988952829
+        },
+        {
+          "customer_id": 18,
+          "old_osm_node_id": "5772633609",
+          "new_osm_node_id": "6775073023",
+          "region": "after",
+          "radius_m": 601.6400510716874
+        },
+        {
+          "customer_id": 14,
+          "old_osm_node_id": "5778363315",
+          "new_osm_node_id": "2026784046",
+          "region": "after",
+          "radius_m": 930.5157042432379
+        }
+      ],
+      "reason": "V5_RETURN_LEG",
+      "details": {
+        "vehicle_5_service": {
+          "leg_index": 4,
+          "from_stop": 3,
+          "to_stop": 0,
+          "served_before": 4,
+          "remaining_customers": []
+        }
+      },
+      "initial_orders": [
+        [
+          0,
+          17,
+          24,
+          12,
+          9,
+          0
+        ],
+        [
+          0,
+          22,
+          18,
+          11,
+          8,
+          0
+        ],
+        [
+          0,
+          5,
+          21,
+          19,
+          23,
+          0
+        ],
+        [
+          0,
+          13,
+          7,
+          1,
+          15,
+          0
+        ],
+        [
+          0,
+          16,
+          20,
+          2,
+          3,
+          0
+        ],
+        [
+          0,
+          14,
+          6,
+          4,
+          10,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 20,
+      "changes": [
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "366466719",
+          "region": "after",
+          "radius_m": 729.2540580125537
+        },
+        {
+          "customer_id": 4,
+          "old_osm_node_id": "1992606860",
+          "new_osm_node_id": "6775375681",
+          "region": "after",
+          "radius_m": 451.6394028793028
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          8,
+          5,
+          15,
+          2,
+          0
+        ],
+        [
+          0,
+          22,
+          16,
+          11,
+          4,
+          0
+        ],
+        [
+          0,
+          10,
+          14,
+          20,
+          6,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          13,
+          7,
+          1,
+          23,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          18,
+          3,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    },
+    {
+      "base": "osm:722241447:2:f/seed-43",
+      "local_seed": 21,
+      "changes": [
+        {
+          "customer_id": 14,
+          "old_osm_node_id": "5778363315",
+          "new_osm_node_id": "11341010431",
+          "region": "before",
+          "radius_m": 633.24615572333
+        },
+        {
+          "customer_id": 16,
+          "old_osm_node_id": "2153453268",
+          "new_osm_node_id": "2302060723",
+          "region": "after",
+          "radius_m": 433.12729540038043
+        },
+        {
+          "customer_id": 20,
+          "old_osm_node_id": "1987340072",
+          "new_osm_node_id": "366398713",
+          "region": "after",
+          "radius_m": 890.6437316215853
+        },
+        {
+          "customer_id": 3,
+          "old_osm_node_id": "9704179565",
+          "new_osm_node_id": "2300537360",
+          "region": "after",
+          "radius_m": 1084.3819147929248
+        }
+      ],
+      "reason": "V5_NOT_ASSIGNED_INCIDENT",
+      "details": {
+        "vehicle_5_service": null
+      },
+      "initial_orders": [
+        [
+          0,
+          5,
+          15,
+          14,
+          2,
+          0
+        ],
+        [
+          0,
+          21,
+          19,
+          13,
+          7,
+          0
+        ],
+        [
+          0,
+          8,
+          4,
+          18,
+          6,
+          0
+        ],
+        [
+          0,
+          3,
+          23,
+          1,
+          10,
+          0
+        ],
+        [
+          0,
+          17,
+          12,
+          24,
+          9,
+          0
+        ],
+        [
+          0,
+          20,
+          22,
+          11,
+          16,
+          0
+        ]
+      ],
+      "stage": "service_leg_prefilter"
+    }
+  ],
+  "accepted": null,
+  "rejection_counts": {
+    "V5_NOT_ASSIGNED_INCIDENT": 15,
+    "V5_RETURN_LEG": 7
+  }
+}
